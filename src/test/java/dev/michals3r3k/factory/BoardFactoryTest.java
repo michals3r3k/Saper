@@ -1,0 +1,80 @@
+package dev.michals3r3k.factory;
+
+import dev.michals3r3k.board.Board;
+import dev.michals3r3k.board.components.BombField;
+import dev.michals3r3k.board.components.Field;
+import dev.michals3r3k.board.components.RegularField;
+import dev.michals3r3k.frame.game.Tile;
+import org.assertj.core.api.Assertions;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.Collections;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class BoardFactoryTest {
+    private static final int ROWS_5 = 5;
+    private static final int ROWS_10 = 10;
+    private static final int COLS_10 = 10;
+    private static final int SATURATION_12 = 12;
+    private static final int SATURATION_25 = 25;
+    private static final int SATURATION_50 = 50;
+
+    private BoardFactory factory;
+
+    @Before
+    public void setUp()
+    {
+        this.factory = new BoardFactory();
+    }
+
+    @Test
+    public void testGetBoard10_10_12()
+    {
+        testGetBoard(ROWS_10, COLS_10, SATURATION_12);
+    }
+
+    @Test
+    public void testGetBoard10_10_25()
+    {
+        testGetBoard(ROWS_10, COLS_10, SATURATION_25);
+    }
+
+    @Test
+    public void testGetBoard10_10_50()
+    {
+        testGetBoard(ROWS_10, COLS_10, SATURATION_50);
+    }
+
+    @Test
+    public void testGetBoard5_10_50()
+    {
+        testGetBoard(ROWS_5, COLS_10, SATURATION_50);
+    }
+
+    private void testGetBoard(int noRows, int noCols, int saturation) {
+        Board board = factory.getBoard(noRows, noCols, saturation);
+        Field[][] rows = board.getFields();
+        StringBuilder sb = new StringBuilder();
+        sb.append("[\n");
+        for (Field[] row : rows) {
+            sb.append("\t[");
+            for (Field field : row) {
+                if(field instanceof RegularField){
+                    sb.append(((RegularField)field).getValue()).append(", ");
+                }
+                else if(field instanceof BombField){
+                    sb.append("X, ");
+                }
+                else{
+                    sb.append("-, ");
+                }
+            }
+            sb.append("]\n");
+        }
+        sb.append("]");
+        System.out.println(sb);
+    }
+
+}
