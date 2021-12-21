@@ -4,17 +4,19 @@ import dev.michals3r3k.frame.menu.GameParams;
 
 import javax.swing.*;
 
-public class GameFrame extends JFrame {
+public class GameFrame extends JFrame
+{
     final JLabel flagLabel;
     Integer flagQuantity;
     GameTimer gameTimer;
 
-    public GameFrame(int cols, int rows, int saturation){
+    public GameFrame(int cols, int rows, int saturation)
+    {
         this.flagQuantity = null;
         this.flagLabel = new JLabel();
 
         this.gameTimer = new GameTimer();
-        gameTimer.setBounds(260,20, 160, 100);
+        gameTimer.setBounds(260, 20, 160, 100);
 
         int boardWidth = cols * GameParams.TILE_SIZE;
         int boardHeight = rows * GameParams.TILE_SIZE;
@@ -32,19 +34,19 @@ public class GameFrame extends JFrame {
         flagPanel.add(label);
 
         BoardPanel boardPanel = new BoardPanel(cols, rows, saturation);
-        boardPanel.setBounds(0,0, boardWidth, boardHeight);
+        boardPanel.setBounds(0, 0, boardWidth, boardHeight);
 
         JLayeredPane boardContent = new JLayeredPane();
         boardContent.setBounds(100, 150, boardWidth, boardHeight);
 
         TilePanel tilePanel = new TilePanel(cols, rows, boardPanel, boardContent, this);
-        tilePanel.setBounds(0,0, boardWidth, boardHeight);
+        tilePanel.setBounds(0, 0, boardWidth, boardHeight);
 
         boardContent.add(tilePanel, new Integer(JLayeredPane.DEFAULT_LAYER + 100));
         boardContent.add(boardPanel, JLayeredPane.DEFAULT_LAYER);
 
         this.setTitle(GameParams.APP_TITLE);
-        this.setSize(cols*GameParams.TILE_SIZE + 200, rows*GameParams.TILE_SIZE + 200);
+        this.setSize(cols * GameParams.TILE_SIZE + 200, rows * GameParams.TILE_SIZE + 200);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLayout(null);
         this.add(flagPanel);
@@ -53,23 +55,26 @@ public class GameFrame extends JFrame {
         this.setVisible(true);
     }
 
-    public Integer getFlagQuantity() {
+    public Integer getFlagQuantity()
+    {
         return flagQuantity;
     }
 
-    public void setFlagQuantity(Integer flagQuantity) {
+    public void setFlagQuantity(Integer flagQuantity)
+    {
         getFlagLabel().setText(flagQuantity.toString());
         this.flagQuantity = flagQuantity;
     }
 
-    public JLabel getFlagLabel() {
+    public JLabel getFlagLabel()
+    {
         return flagLabel;
     }
 
     public void addFlag()
     {
         Integer flagQuantity = getFlagQuantity();
-        if(flagQuantity != null)
+        if(flagQuantity!=null)
         {
             setFlagQuantity(flagQuantity + 1);
             return;
@@ -80,7 +85,7 @@ public class GameFrame extends JFrame {
     public void subtractFlag()
     {
         Integer flagQuantity = getFlagQuantity();
-        if(flagQuantity != null)
+        if(flagQuantity!=null)
         {
             setFlagQuantity(flagQuantity - 1);
             return;
@@ -88,16 +93,18 @@ public class GameFrame extends JFrame {
         throw new IllegalStateException("FlagQuantity is null!");
     }
 
-    public GameTimer getGameTimer() {
+    public GameTimer getGameTimer()
+    {
         return gameTimer;
     }
 
     public boolean isCanPutFlag()
     {
-        return getFlagQuantity()!=null && getFlagQuantity()>0;
+        return getFlagQuantity()!=null && getFlagQuantity() > 0;
     }
 
-    public void gameWin() {
+    public void gameWin()
+    {
         getGameTimer().getTimer().stop();
         JFrame jFrame = new JFrame();
         jFrame.setVisible(true);

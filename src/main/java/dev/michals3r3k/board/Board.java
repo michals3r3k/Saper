@@ -5,17 +5,20 @@ import dev.michals3r3k.board.components.Field;
 /**
  * A class that represents the saper's game board.
  */
-public class Board {
+public class Board
+{
     private Field[][] fields;
     private final int bombQuantity;
     private boolean calculated;
 
-    public Board(Field[][] fields, int bombQuantity){
+    public Board(Field[][] fields, int bombQuantity)
+    {
         this.fields = fields;
         this.bombQuantity = bombQuantity;
     }
 
-    public Field[][] getFields() {
+    public Field[][] getFields()
+    {
         return fields;
     }
 
@@ -29,15 +32,18 @@ public class Board {
         return fields[x][y];
     }
 
-    public int getBombQuantity() {
+    public int getBombQuantity()
+    {
         return bombQuantity;
     }
 
-    public boolean isCalculated() {
+    public boolean isCalculated()
+    {
         return calculated;
     }
 
-    public void setCalculated(boolean calculated) {
+    public void setCalculated(boolean calculated)
+    {
         this.calculated = calculated;
     }
 

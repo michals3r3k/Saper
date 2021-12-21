@@ -5,7 +5,8 @@ import dev.michals3r3k.frame.menu.GameParams;
 import javax.swing.*;
 import java.awt.*;
 
-public class FieldPanel extends JPanel {
+public class FieldPanel extends JPanel
+{
     private final int x;
     private final int y;
     String value;
@@ -35,7 +36,8 @@ public class FieldPanel extends JPanel {
         this.value = value;
     }
 
-    public void setLabel(JLabel jLabel) {
+    public void setLabel(JLabel jLabel)
+    {
         this.label = jLabel;
     }
 

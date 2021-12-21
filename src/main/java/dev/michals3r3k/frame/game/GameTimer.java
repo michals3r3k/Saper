@@ -3,7 +3,8 @@ package dev.michals3r3k.frame.game;
 import javax.swing.*;
 import java.awt.*;
 
-public class GameTimer extends JPanel {
+public class GameTimer extends JPanel
+{
     int seconds;
     int minutes;
     int elapsedTime;
@@ -32,13 +33,14 @@ public class GameTimer extends JPanel {
         timeLabel.setFont(new Font("Verdana", Font.PLAIN, 25));
         timeLabel.setOpaque(true);
         timeLabel.setHorizontalAlignment(JTextField.CENTER);
-        timeLabel.setBounds(0,0,160,50);
+        timeLabel.setBounds(0, 0, 160, 50);
 
         this.add(timeLabel);
         this.setLayout(null);
     }
 
-    public Timer getTimer() {
+    public Timer getTimer()
+    {
         return timer;
     }
 

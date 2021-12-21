@@ -1,19 +1,23 @@
 package dev.michals3r3k.board.components;
 
-public abstract class Field {
+public abstract class Field
+{
     private final int rowPosition;
     private final int colPosition;
 
-    public Field(int rowPosition, int colPosition) {
+    public Field(int rowPosition, int colPosition)
+    {
         this.rowPosition = rowPosition;
         this.colPosition = colPosition;
     }
 
-    public int getRowPosition() {
+    public int getRowPosition()
+    {
         return rowPosition;
     }
 
-    public int getColPosition() {
+    public int getColPosition()
+    {
         return colPosition;
     }
 

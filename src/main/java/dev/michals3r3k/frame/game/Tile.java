@@ -17,7 +17,8 @@ import java.util.Objects;
 import static javax.swing.SwingUtilities.isLeftMouseButton;
 import static javax.swing.SwingUtilities.isRightMouseButton;
 
-public class Tile extends JPanel implements MouseListener {
+public class Tile extends JPanel implements MouseListener
+{
     int x;
     int y;
     private GameFrame gameFrame;
@@ -27,7 +28,13 @@ public class Tile extends JPanel implements MouseListener {
     private TilePanel tilePanel;
     private JLayeredPane boardContainer;
 
-    public Tile(int x, int y, BoardPanel boardPanel, TilePanel tilePanel, JLayeredPane boardContainer, GameFrame gameFrame)
+    public Tile(
+        int x,
+        int y,
+        BoardPanel boardPanel,
+        TilePanel tilePanel,
+        JLayeredPane boardContainer,
+        GameFrame gameFrame)
     {
         this.x = x;
         this.y = y;
@@ -45,19 +52,22 @@ public class Tile extends JPanel implements MouseListener {
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void mouseClicked(MouseEvent e)
+    {
         if(isLeftMouseButton(e) && !isFlag() && tilePanel.isCanPlay())
         {
             leftClickAction();
             return;
         }
-        if(isRightMouseButton(e) && tilePanel.isCanPlay() && boardPanel.getBoard().isCalculated())
+        if(isRightMouseButton(e) && tilePanel.isCanPlay()
+            && boardPanel.getBoard().isCalculated())
         {
             toggleFlag();
         }
     }
 
-    private void toggleFlag() {
+    private void toggleFlag()
+    {
         if(!isFlag() && !gameFrame.isCanPutFlag())
         {
             return;
@@ -73,7 +83,8 @@ public class Tile extends JPanel implements MouseListener {
         this.setBackground(Color.LIGHT_GRAY);
     }
 
-    private void leftClickAction() {
+    private void leftClickAction()
+    {
         Board board = boardPanel.getBoard();
         Field field = board.getField(x, y);
         this.setVisible(false);
@@ -93,16 +104,16 @@ public class Tile extends JPanel implements MouseListener {
         {
             boardFactory.calculateRegularFields(board, gameFrame);
             boardPanel.updateFields();
-            if (boardPanel.getBoard().getField(x, y) instanceof EmptyField)
+            if(boardPanel.getBoard().getField(x, y) instanceof EmptyField)
             {
                 tilePanel.uncoverEmptyNeighbours(x, y);
             }
             gameFrame.getGameTimer().getTimer().start();
             return;
         }
-        if(field.getFieldType() == FieldType.BOMB)
+        if(field.getFieldType()==FieldType.BOMB)
         {
-            boardPanel.getFieldPanel(x ,y).setBackground(Color.red);
+            boardPanel.getFieldPanel(x, y).setBackground(Color.red);
             tilePanel.uncoverBombs();
             tilePanel.setCanPlay(false);
             gameFrame.getGameTimer().getTimer().stop();
@@ -113,52 +124,68 @@ public class Tile extends JPanel implements MouseListener {
         }
     }
 
-    public boolean isFlag() {
+    public boolean isFlag()
+    {
         return flag;
     }
 
-    public void setFlag(boolean flag) {
+    public void setFlag(boolean flag)
+    {
         this.flag = flag;
     }
 
-    public int getPosX() {
+    public int getPosX()
+    {
         return x;
     }
 
-    public int getPosY() {
+    public int getPosY()
+    {
         return y;
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
+    public void mousePressed(MouseEvent e)
+    {
 
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
+    public void mouseReleased(MouseEvent e)
+    {
 
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
+    public void mouseEntered(MouseEvent e)
+    {
 
     }
 
     @Override
-    public void mouseExited(MouseEvent e) {
+    public void mouseExited(MouseEvent e)
+    {
 
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object o)
+    {
+        if(this==o)
+        {
+            return true;
+        }
+        if(o==null || getClass()!=o.getClass())
+        {
+            return false;
+        }
         Tile tile = (Tile) o;
-        return x == tile.x && y == tile.y;
+        return x==tile.x && y==tile.y;
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return Objects.hash(x, y);
     }
 

@@ -9,23 +9,30 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public class TilePanel extends JPanel {
+public class TilePanel extends JPanel
+{
     Tile[][] tilePanels;
     BoardPanel boardPanel;
     boolean canPlay;
 
-    TilePanel(int cols, int rows, BoardPanel boardPanel, JLayeredPane boardContainer, GameFrame gameFrame)
+    TilePanel(
+        int cols,
+        int rows,
+        BoardPanel boardPanel,
+        JLayeredPane boardContainer,
+        GameFrame gameFrame)
     {
         this.canPlay = true;
         this.boardPanel = boardPanel;
         this.tilePanels = new Tile[rows][cols];
         this.setLayout(new GridLayout(rows, cols));
         this.setOpaque(false);
-        for(int i = 0; i<rows; i++)
+        for(int i = 0; i < rows; i++)
         {
-            for(int j=0; j<cols; j++)
+            for(int j = 0; j < cols; j++)
             {
-                tilePanels[i][j] = new Tile(i, j, boardPanel, this, boardContainer, gameFrame);
+                tilePanels[i][j] = new Tile(i, j, boardPanel, this,
+                    boardContainer, gameFrame);
                 this.add(tilePanels[i][j]);
             }
         }
@@ -34,9 +41,9 @@ public class TilePanel extends JPanel {
     void uncoverBombs()
     {
         Field[][] fields = boardPanel.getBoard().getFields();
-        for (int i=0; i< fields.length; i++)
+        for(int i = 0; i < fields.length; i++)
         {
-            for (int j=0; j<fields[i].length; j++)
+            for(int j = 0; j < fields[i].length; j++)
             {
                 if(fields[i][j].getFieldType() == FieldType.BOMB && !getTile(i, j).isFlag())
                 {
@@ -53,7 +60,7 @@ public class TilePanel extends JPanel {
 
     public void uncoverEmptyNeighbours(int x, int y)
     {
-        getNeighbourTiles(x, y).forEach(t->t.setVisible(false));
+        getNeighbourTiles(x, y).forEach(t -> t.setVisible(false));
     }
 
     private List<Tile> getNeighbourTiles(int x, int y)
@@ -66,7 +73,7 @@ public class TilePanel extends JPanel {
 
     private List<Tile> getNeighbourTiles(List<Tile> result, int index)
     {
-        if (index == result.size())
+        if(index == result.size())
         {
             return result;
         }
@@ -77,7 +84,7 @@ public class TilePanel extends JPanel {
         {
             return getNeighbourTiles(result, ++index);
         }
-        if(x-1 >= 0 && y-1 >= 0 && isNotBomb(x-1, y-1)) //left-top
+        if(x - 1 >= 0 && y - 1 >= 0 && isNotBomb(x - 1, y - 1)) //left-top
         {
             Tile leftTop = getTile(x - 1, y - 1);
             if(!result.contains(leftTop))
@@ -85,7 +92,7 @@ public class TilePanel extends JPanel {
                 result.add(leftTop);
             }
         }
-        if(x-1 >= 0 && isNotBomb(x-1, y)) //top
+        if(x - 1 >= 0 && isNotBomb(x - 1, y)) //top
         {
             Tile top = getTile(x - 1, y);
             if(!result.contains(top))
@@ -95,50 +102,50 @@ public class TilePanel extends JPanel {
         }
         Field[][] fields = boardPanel.getBoard().getFields();
         int colSize = fields[x].length;
-        if(x-1 >= 0 && y+1 < colSize && isNotBomb(x-1,y+1)) //top-right
+        if(x - 1 >= 0 && y + 1 < colSize && isNotBomb(x - 1, y + 1)) //top-right
         {
-            Tile rightTop = getTile(x - 1, y+1);
+            Tile rightTop = getTile(x - 1, y + 1);
             if(!result.contains(rightTop))
             {
                 result.add(rightTop);
             }
         }
-        if(y-1 >= 0 && isNotBomb(x,y-1)) //left
+        if(y - 1 >= 0 && isNotBomb(x, y - 1)) //left
         {
-            Tile left = getTile(x, y-1);
+            Tile left = getTile(x, y - 1);
             if(!result.contains(left))
             {
                 result.add(left);
             }
         }
-        if(y+1 < colSize && isNotBomb(x,y+1)) //right
+        if(y + 1 < colSize && isNotBomb(x, y + 1)) //right
         {
-            Tile right = getTile(x, y+1);
+            Tile right = getTile(x, y + 1);
             if(!result.contains(right))
             {
                 result.add(right);
             }
         }
         int rowSize = fields.length;
-        if(x+1 < rowSize && y-1 >= 0 && isNotBomb(x+1,y-1)) //left-bottom
+        if(x + 1 < rowSize && y - 1 >= 0 && isNotBomb(x + 1, y - 1)) //left-bottom
         {
-            Tile leftBottom = getTile(x + 1, y-1);
+            Tile leftBottom = getTile(x + 1, y - 1);
             if(!result.contains(leftBottom))
             {
                 result.add(leftBottom);
             }
         }
-        if(x+1 < rowSize && isNotBomb(x+1,y)) //bottom
+        if(x + 1 < rowSize && isNotBomb(x + 1, y)) //bottom
         {
-            Tile bottom = getTile(x+1, y);
+            Tile bottom = getTile(x + 1, y);
             if(!result.contains(bottom))
             {
                 result.add(bottom);
             }
         }
-        if(x+1 < rowSize && y+1 < colSize && isNotBomb(x+1,y+1)) //bottom right
+        if(x + 1 < rowSize && y + 1 < colSize && isNotBomb(x + 1, y + 1)) //bottom right
         {
-            Tile rightBottom = getTile(x+1, y+1);
+            Tile rightBottom = getTile(x + 1, y + 1);
             if(!result.contains(rightBottom))
             {
                 result.add(rightBottom);
@@ -152,21 +159,24 @@ public class TilePanel extends JPanel {
         return boardPanel.getBoard().getField(x, y).getFieldType() == FieldType.REGULAR;
     }
 
-    public boolean isCanPlay() {
+    public boolean isCanPlay()
+    {
         return canPlay;
     }
 
-    public void setCanPlay(boolean canPlay) {
+    public void setCanPlay(boolean canPlay)
+    {
         this.canPlay = canPlay;
     }
 
-    public boolean isAllNonBombsUncovered() {
+    public boolean isAllNonBombsUncovered()
+    {
         return !Arrays.asList(this.tilePanels)
-                .stream()
-                .map(Arrays::asList)
-                .flatMap(Collection::stream)
-                .filter(this::isNotBomb)
-                .anyMatch(Tile::isVisible);
+            .stream()
+            .map(Arrays::asList)
+            .flatMap(Collection::stream)
+            .filter(this::isNotBomb)
+            .anyMatch(Tile::isVisible);
     }
 
     private boolean isNotBomb(Tile tile)

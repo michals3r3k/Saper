@@ -9,7 +9,8 @@ import dev.michals3r3k.frame.menu.GameParams;
 import javax.swing.*;
 import java.awt.*;
 
-public class BoardPanel extends JPanel{
+public class BoardPanel extends JPanel
+{
     Board board;
     JPanel[][] boardPanels;
     FieldPanel[][] fieldPanels;
@@ -17,12 +18,12 @@ public class BoardPanel extends JPanel{
 
     BoardPanel(int cols, int rows, int saturation)
     {
-        this.board = new BoardFactory().getBoard(rows,cols,saturation);
+        this.board = new BoardFactory().getBoard(rows, cols, saturation);
         this.fieldPanels = new FieldPanel[rows][cols];
         this.setLayout(new GridLayout(rows, cols));
-        for(int i = 0; i< rows; i++)
+        for(int i = 0; i < rows; i++)
         {
-            for(int j = 0; j< cols; j++)
+            for(int j = 0; j < cols; j++)
             {
                 FieldPanel fieldPanel = new FieldPanel(i, j);
                 if(board.getFields()[i][j] instanceof BombField)
@@ -33,27 +34,26 @@ public class BoardPanel extends JPanel{
                 this.add(fieldPanel);
             }
         }
-//        fill();
+        //        fill();
     }
 
     void updateFields()
     {
         int rows = board.getFields().length;
-        int cols = board.getFields()[board.getFields().length-1].length;
-        for(int i = 0; i< rows; i++)
+        int cols = board.getFields()[board.getFields().length - 1].length;
+        for(int i = 0; i < rows; i++)
         {
-            for(int j = 0; j< cols; j++)
+            for(int j = 0; j < cols; j++)
             {
                 if(board.getFields()[i][j] instanceof RegularField)
                 {
                     RegularField field = (RegularField) board.getFields()[i][j];
                     int value = field.getValue();
-                    if(value>0)
+                    if(value > 0)
                     {
                         fieldPanels[i][j].setValue(value);
                     }
-                }
-                else if(board.getFields()[i][j] instanceof BombField)
+                } else if(board.getFields()[i][j] instanceof BombField)
                 {
                     fieldPanels[i][j].setValue("B");
                 }
@@ -61,13 +61,14 @@ public class BoardPanel extends JPanel{
         }
     }
 
-    void fill() {
+    void fill()
+    {
         this.removeAll();
         int rows = board.getFields().length;
-        int cols = board.getFields()[board.getFields().length-1].length;
-        for(int i = 0; i< rows; i++)
+        int cols = board.getFields()[board.getFields().length - 1].length;
+        for(int i = 0; i < rows; i++)
         {
-            for(int j = 0; j< cols; j++)
+            for(int j = 0; j < cols; j++)
             {
                 JPanel jPanel = new JPanel();
                 jPanel.setSize(new Dimension(GameParams.TILE_SIZE, GameParams.TILE_SIZE));
@@ -79,7 +80,7 @@ public class BoardPanel extends JPanel{
                 {
                     RegularField field = (RegularField) board.getFields()[i][j];
                     int value = field.getValue();
-                    if(value>0)
+                    if(value > 0)
                     {
                         jPanel.setLayout(new BorderLayout());
                         JLabel jLabel = new JLabel("" + value);
@@ -88,8 +89,7 @@ public class BoardPanel extends JPanel{
                         jLabel.setHorizontalAlignment(JLabel.CENTER);
                         jPanel.add(jLabel);
                     }
-                }
-                else if(board.getFields()[i][j] instanceof BombField)
+                } else if(board.getFields()[i][j] instanceof BombField)
                 {
                     jPanel.setLayout(new BorderLayout());
                     JLabel jLabel = new JLabel("B");
@@ -120,6 +120,5 @@ public class BoardPanel extends JPanel{
     {
         return fieldPanels[x][y];
     }
-
 
 }

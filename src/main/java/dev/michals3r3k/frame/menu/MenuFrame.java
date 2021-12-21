@@ -6,18 +6,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
-public class MenuFrame extends JFrame {
+public class MenuFrame extends JFrame
+{
 
     public MenuFrame()
     {
         JLabel headerLabel = new JLabel("SAPER BY MICHAL S");
-        headerLabel.setBounds(20,0,500,60);
+        headerLabel.setBounds(20, 0, 500, 60);
         headerLabel.setFont(new Font(null, Font.BOLD, 30));
         headerLabel.setForeground(Color.DARK_GRAY);
         JPanel headerPanel = new JPanel(null);
@@ -26,28 +23,28 @@ public class MenuFrame extends JFrame {
         headerPanel.add(headerLabel);
 
         JLabel nameLabel = new JLabel("Enter name:");
-        nameLabel.setBounds(0,0,200,20);
+        nameLabel.setBounds(0, 0, 200, 20);
         JLabel colsLabel = new JLabel("Enter board cols:");
-        colsLabel.setBounds(0,30,200,20);
+        colsLabel.setBounds(0, 30, 200, 20);
         JLabel rowsLabel = new JLabel("Enter board rows:");
-        rowsLabel.setBounds(0,60,200,20);
+        rowsLabel.setBounds(0, 60, 200, 20);
         JLabel difficultyLabel = new JLabel("Select difficulty:");
-        difficultyLabel.setBounds(0,90,200,20);
+        difficultyLabel.setBounds(0, 90, 200, 20);
         JPanel labelPanel = new JPanel(null);
-        labelPanel.setBounds(0,0,200,130);
+        labelPanel.setBounds(0, 0, 200, 130);
         labelPanel.add(nameLabel);
         labelPanel.add(colsLabel);
         labelPanel.add(rowsLabel);
         labelPanel.add(difficultyLabel);
 
         TextField nameField = new TextField();
-        nameField.setBounds(0,0,200,20);
+        nameField.setBounds(0, 0, 200, 20);
         TextField colsField = new TextField();
         colsField.setBounds(0, 30, 40, 20);
         TextField rowsField = new TextField();
         rowsField.setBounds(0, 60, 40, 20);
         JComboBox difficultyField = new JComboBox(GameParams.DIFFICULTIES);
-        difficultyField.setBounds(0,90,100,20);
+        difficultyField.setBounds(0, 90, 100, 20);
         JPanel inputPanel = new JPanel(null);
         inputPanel.setBounds(210, 0, 200, 130);
         inputPanel.add(nameField);
@@ -62,7 +59,8 @@ public class MenuFrame extends JFrame {
 
         JButton submitButton = new JButton("Start!");
         submitButton.setBounds(200, 330, 130, 40);
-        submitButton.addActionListener(submitForm(nameField, colsField, rowsField, difficultyField));
+        submitButton.addActionListener(
+            submitForm(nameField, colsField, rowsField, difficultyField));
 
         this.setTitle(GameParams.APP_TITLE);
         this.setSize(550, 650);
@@ -74,24 +72,31 @@ public class MenuFrame extends JFrame {
         this.add(submitButton);
     }
 
-    private ActionListener submitForm(TextField nameField, TextField colsField, TextField rowsField, JComboBox difficultyField)
+    private ActionListener submitForm(
+        TextField nameField,
+        TextField colsField,
+        TextField rowsField,
+        JComboBox difficultyField)
     {
-        return e->{
+        return e -> {
             List<FormError> errors = validateFormFields(nameField, colsField, rowsField);
             if(!errors.isEmpty())
             {
                 String errorMessage = prepareErrorMessage(errors);
-                JOptionPane.showMessageDialog(null, errorMessage, "Form submit failure", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, errorMessage,
+                    "Form submit failure", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             this.dispose();
             int width = Integer.parseInt(colsField.getText());
             int height = Integer.parseInt(rowsField.getText());
-            GameFrame gameFrame = new GameFrame(width, height, GameParams.DIFFICULTY_MAP.get(difficultyField.getSelectedItem()));
+            GameFrame gameFrame = new GameFrame(width, height,
+                GameParams.DIFFICULTY_MAP.get(difficultyField.getSelectedItem()));
         };
     }
 
-    private String prepareErrorMessage(List<FormError> errors) {
+    private String prepareErrorMessage(List<FormError> errors)
+    {
         StringBuilder sb = new StringBuilder("Form is containing errors given below:");
         if(errors.contains(FormError.IS_NOT_DIGIT))
         {
@@ -104,7 +109,10 @@ public class MenuFrame extends JFrame {
         return sb.toString();
     }
 
-    private List<FormError> validateFormFields(TextField nameField, TextField colsField, TextField rowsField)
+    private List<FormError> validateFormFields(
+        TextField nameField,
+        TextField colsField,
+        TextField rowsField)
     {
         List<FormError> errors = new ArrayList<>();
         if(isAnyFieldEmpty(nameField, colsField, rowsField))
@@ -118,23 +126,33 @@ public class MenuFrame extends JFrame {
         return errors;
     }
 
-    private boolean isNumberFieldsValid(TextField colsField, TextField rowsField) {
-        for (char c : colsField.getText().toCharArray()) {
-            if(!Character.isDigit(c)){
+    private boolean isNumberFieldsValid(TextField colsField, TextField rowsField)
+    {
+        for(char c : colsField.getText().toCharArray())
+        {
+            if(!Character.isDigit(c))
+            {
                 return false;
             }
         }
-        for (char c : rowsField.getText().toCharArray()) {
-            if(!Character.isDigit(c)){
+        for(char c : rowsField.getText().toCharArray())
+        {
+            if(!Character.isDigit(c))
+            {
                 return false;
             }
         }
         return true;
     }
 
-    private boolean isAnyFieldEmpty(TextField nameField, TextField colsField, TextField rowsField)
+    private boolean isAnyFieldEmpty(
+        TextField nameField,
+        TextField colsField,
+        TextField rowsField)
     {
-        return nameField.getText().isBlank() || colsField.getText().isBlank() || rowsField.getText().isBlank();
+        return nameField.getText().isBlank()
+            || colsField.getText().isBlank()
+            || rowsField.getText().isBlank();
     }
 
 }

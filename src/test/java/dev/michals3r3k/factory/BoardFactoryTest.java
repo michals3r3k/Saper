@@ -4,16 +4,11 @@ import dev.michals3r3k.board.Board;
 import dev.michals3r3k.board.components.BombField;
 import dev.michals3r3k.board.components.Field;
 import dev.michals3r3k.board.components.RegularField;
-import dev.michals3r3k.frame.game.Tile;
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collections;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
-public class BoardFactoryTest {
+public class BoardFactoryTest
+{
     private static final int ROWS_5 = 5;
     private static final int ROWS_10 = 10;
     private static final int COLS_10 = 10;
@@ -53,21 +48,25 @@ public class BoardFactoryTest {
         testGetBoard(ROWS_5, COLS_10, SATURATION_50);
     }
 
-    private void testGetBoard(int noRows, int noCols, int saturation) {
+    private void testGetBoard(int noRows, int noCols, int saturation)
+    {
         Board board = factory.getBoard(noRows, noCols, saturation);
         Field[][] rows = board.getFields();
         StringBuilder sb = new StringBuilder();
         sb.append("[\n");
-        for (Field[] row : rows) {
+        for(Field[] row : rows)
+        {
             sb.append("\t[");
-            for (Field field : row) {
-                if(field instanceof RegularField){
-                    sb.append(((RegularField)field).getValue()).append(", ");
-                }
-                else if(field instanceof BombField){
+            for(Field field : row)
+            {
+                if(field instanceof RegularField)
+                {
+                    sb.append(((RegularField) field).getValue()).append(", ");
+                } else if(field instanceof BombField)
+                {
                     sb.append("X, ");
-                }
-                else{
+                } else
+                {
                     sb.append("-, ");
                 }
             }

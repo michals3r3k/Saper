@@ -4,4 +4,5 @@ public enum FieldType {
     EMPTY,
     REGULAR,
     BOMB;
+
 }
