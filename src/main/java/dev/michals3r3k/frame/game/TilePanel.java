@@ -186,7 +186,8 @@ public class TilePanel extends JPanel
 
     private boolean isNotBomb(int x, int y)
     {
-        return boardPanel.getBoard().getField(x, y).getFieldType() != FieldType.BOMB;
+        FieldType fieldType = boardPanel.getBoard().getField(x, y).getFieldType();
+        return  fieldType != FieldType.BOMB;
     }
 
 }

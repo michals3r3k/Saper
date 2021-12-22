@@ -8,7 +8,7 @@ public class GameFrame extends JFrame
 {
     final JLabel flagLabel;
     Integer flagQuantity;
-    GameTimer gameTimer;
+    final GameTimer gameTimer;
 
     public GameFrame(int cols, int rows, int saturation)
     {
@@ -42,8 +42,8 @@ public class GameFrame extends JFrame
         TilePanel tilePanel = new TilePanel(cols, rows, boardPanel, boardContent, this);
         tilePanel.setBounds(0, 0, boardWidth, boardHeight);
 
-        boardContent.add(tilePanel, new Integer(JLayeredPane.DEFAULT_LAYER + 100));
-        boardContent.add(boardPanel, JLayeredPane.DEFAULT_LAYER);
+        boardContent.add(tilePanel, JLayeredPane.DEFAULT_LAYER);
+        boardContent.add(boardPanel, JLayeredPane.DEFAULT_LAYER+100);
 
         this.setTitle(GameParams.APP_TITLE);
         this.setSize(cols * GameParams.TILE_SIZE + 200, rows * GameParams.TILE_SIZE + 200);
@@ -74,7 +74,7 @@ public class GameFrame extends JFrame
     public void addFlag()
     {
         Integer flagQuantity = getFlagQuantity();
-        if(flagQuantity!=null)
+        if(flagQuantity != null)
         {
             setFlagQuantity(flagQuantity + 1);
             return;
@@ -85,7 +85,7 @@ public class GameFrame extends JFrame
     public void subtractFlag()
     {
         Integer flagQuantity = getFlagQuantity();
-        if(flagQuantity!=null)
+        if(flagQuantity != null)
         {
             setFlagQuantity(flagQuantity - 1);
             return;
@@ -100,7 +100,7 @@ public class GameFrame extends JFrame
 
     public boolean isCanPutFlag()
     {
-        return getFlagQuantity()!=null && getFlagQuantity() > 0;
+        return getFlagQuantity() != null && getFlagQuantity() > 0;
     }
 
     public void gameWin()
@@ -112,4 +112,5 @@ public class GameFrame extends JFrame
         JLabel jLabel = new JLabel("YOU WIN!");
         jFrame.add(jLabel);
     }
+
 }

@@ -1,8 +1,6 @@
 package dev.michals3r3k.frame.game;
 
 import dev.michals3r3k.board.Board;
-import dev.michals3r3k.board.components.BombField;
-import dev.michals3r3k.board.components.EmptyField;
 import dev.michals3r3k.board.components.Field;
 import dev.michals3r3k.board.components.FieldType;
 import dev.michals3r3k.factory.BoardFactory;
@@ -44,8 +42,8 @@ public class Tile extends JPanel implements MouseListener
         this.boardContainer = boardContainer;
         this.boardFactory = new BoardFactory();
         this.boardPanel = boardPanel;
-        this.setBackground(Color.LIGHT_GRAY);
-
+//        this.setBackground(Color.LIGHT_GRAY);
+        this.setBackground(new Color(255,100,100,30));
         this.setSize(new Dimension(GameParams.TILE_SIZE, GameParams.TILE_SIZE));
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         this.addMouseListener(this);
@@ -91,34 +89,28 @@ public class Tile extends JPanel implements MouseListener
         if(tilePanel.isAllNonBombsUncovered())
         {
             gameFrame.gameWin();
-        }
-        if(field instanceof BombField && !board.isCalculated())
-        {
-            boardFactory.swapBomb(x, y, board);
-            boardFactory.calculateRegularFields(board, gameFrame);
-            boardPanel.updateFields();
-            gameFrame.getGameTimer().getTimer().start();
             return;
         }
         if(!board.isCalculated())
         {
+            if(field.getFieldType() == FieldType.BOMB)
+            {
+                boardFactory.swapBomb(x, y, board);
+            }
             boardFactory.calculateRegularFields(board, gameFrame);
             boardPanel.updateFields();
-            if(boardPanel.getBoard().getField(x, y) instanceof EmptyField)
-            {
-                tilePanel.uncoverEmptyNeighbours(x, y);
-            }
             gameFrame.getGameTimer().getTimer().start();
             return;
         }
-        if(field.getFieldType()==FieldType.BOMB)
+        if(field.getFieldType() == FieldType.BOMB)
         {
             boardPanel.getFieldPanel(x, y).setBackground(Color.red);
             tilePanel.uncoverBombs();
             tilePanel.setCanPlay(false);
             gameFrame.getGameTimer().getTimer().stop();
+            return;
         }
-        if(field instanceof EmptyField)
+        if(field.getFieldType() == FieldType.EMPTY)
         {
             tilePanel.uncoverEmptyNeighbours(x, y);
         }
@@ -171,16 +163,16 @@ public class Tile extends JPanel implements MouseListener
     @Override
     public boolean equals(Object o)
     {
-        if(this==o)
+        if(this == o)
         {
             return true;
         }
-        if(o==null || getClass()!=o.getClass())
+        if(o == null || getClass() != o.getClass())
         {
             return false;
         }
         Tile tile = (Tile) o;
-        return x==tile.x && y==tile.y;
+        return x == tile.x && y == tile.y;
     }
 
     @Override
