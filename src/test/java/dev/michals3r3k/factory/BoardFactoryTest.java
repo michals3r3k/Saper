@@ -1,8 +1,8 @@
 package dev.michals3r3k.factory;
 
 import dev.michals3r3k.board.Board;
-import dev.michals3r3k.board.components.BombField;
 import dev.michals3r3k.board.components.Field;
+import dev.michals3r3k.board.components.FieldType;
 import dev.michals3r3k.board.components.RegularField;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,13 +59,15 @@ public class BoardFactoryTest
             sb.append("\t[");
             for(Field field : row)
             {
-                if(field instanceof RegularField)
+                if(field.getFieldType() == FieldType.REGULAR)
                 {
                     sb.append(((RegularField) field).getValue()).append(", ");
-                } else if(field instanceof BombField)
+                }
+                else if(field.getFieldType() == FieldType.BOMB)
                 {
                     sb.append("X, ");
-                } else
+                }
+                else
                 {
                     sb.append("-, ");
                 }
