@@ -10,11 +10,16 @@ public class Board
     private Field[][] fields;
     private final int bombQuantity;
     private boolean calculated;
+    private int width;
+    private int height;
 
     public Board(Field[][] fields, int bombQuantity)
     {
         this.fields = fields;
         this.bombQuantity = bombQuantity;
+        this.height = fields.length;
+        this.width = fields[height-1].length;
+        this.calculated = false;
     }
 
     public Field[][] getFields()
@@ -45,6 +50,16 @@ public class Board
     public void setCalculated(boolean calculated)
     {
         this.calculated = calculated;
+    }
+
+    public int getWidth()
+    {
+        return width;
+    }
+
+    public int getHeight()
+    {
+        return height;
     }
 
 }

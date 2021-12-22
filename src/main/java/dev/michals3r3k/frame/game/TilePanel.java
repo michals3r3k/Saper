@@ -1,6 +1,10 @@
 package dev.michals3r3k.frame.game;
 
-import dev.michals3r3k.board.components.*;
+import dev.michals3r3k.board.Board;
+import dev.michals3r3k.board.components.Field;
+import dev.michals3r3k.board.components.FieldType;
+import dev.michals3r3k.board.components.Position;
+import dev.michals3r3k.board.components.RegularField;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,42 +16,48 @@ import java.util.List;
 public class TilePanel extends JPanel
 {
     Tile[][] tilePanels;
-    BoardPanel boardPanel;
+    Board board;
     boolean canPlay;
 
     TilePanel(
-        int cols,
-        int rows,
-        BoardPanel boardPanel,
-        JLayeredPane boardContainer,
+        Board board,
         GameFrame gameFrame)
     {
         this.canPlay = true;
-        this.boardPanel = boardPanel;
+        int rows = board.getHeight();
+        int cols = board.getWidth();
         this.tilePanels = new Tile[rows][cols];
         this.setLayout(new GridLayout(rows, cols));
         this.setOpaque(false);
+        this.board = board;
         for(int i = 0; i < rows; i++)
         {
             for(int j = 0; j < cols; j++)
             {
-                tilePanels[i][j] = new Tile(i, j, boardPanel, this,
-                    boardContainer, gameFrame);
+                tilePanels[i][j] = new Tile(this.board, new Position(i, j),
+                    this, gameFrame);
                 this.add(tilePanels[i][j]);
             }
         }
     }
 
-    void uncoverBombs()
+    void uncoverBombs(Position position)
     {
-        Field[][] fields = boardPanel.getBoard().getFields();
+        int currX = position.getX();
+        int currY = position.getY();
+        Field[][] fields = board.getFields();
         for(int i = 0; i < fields.length; i++)
         {
             for(int j = 0; j < fields[i].length; j++)
             {
-                if(fields[i][j].getFieldType() == FieldType.BOMB && !getTile(i, j).isFlag())
+                Tile tile = getTile(i, j);
+                if(tile.getFieldType() == FieldType.BOMB && !tile.isFlag())
                 {
-                    getTile(i, j).setVisible(false);
+                    if(currX != i || currY != j)
+                    {
+                        tile.setBackground(Color.DARK_GRAY);
+                    }
+                    tile.setText("B");
                 }
             }
         }
@@ -60,7 +70,14 @@ public class TilePanel extends JPanel
 
     public void uncoverEmptyNeighbours(int x, int y)
     {
-        getNeighbourTiles(x, y).forEach(t -> t.setVisible(false));
+        List<Tile> neighbourTiles = getNeighbourTiles(x, y);
+        neighbourTiles.forEach(t -> {
+            t.setBackground(Color.DARK_GRAY);
+            if(t.getFieldType() == FieldType.REGULAR)
+            {
+                t.setValue(((RegularField) board.getField(t.getPosX(), t.getPosY())).getValue());
+            }
+        });
     }
 
     private List<Tile> getNeighbourTiles(int x, int y)
@@ -100,7 +117,7 @@ public class TilePanel extends JPanel
                 result.add(top);
             }
         }
-        Field[][] fields = boardPanel.getBoard().getFields();
+        Field[][] fields = board.getFields();
         int colSize = fields[x].length;
         if(x - 1 >= 0 && y + 1 < colSize && isNotBomb(x - 1, y + 1)) //top-right
         {
@@ -156,7 +173,7 @@ public class TilePanel extends JPanel
 
     private boolean isRegularField(int x, int y)
     {
-        return boardPanel.getBoard().getField(x, y).getFieldType() == FieldType.REGULAR;
+        return board.getField(x, y).getFieldType() == FieldType.REGULAR;
     }
 
     public boolean isCanPlay()
@@ -186,7 +203,7 @@ public class TilePanel extends JPanel
 
     private boolean isNotBomb(int x, int y)
     {
-        FieldType fieldType = boardPanel.getBoard().getField(x, y).getFieldType();
+        FieldType fieldType = board.getField(x, y).getFieldType();
         return  fieldType != FieldType.BOMB;
     }
 
