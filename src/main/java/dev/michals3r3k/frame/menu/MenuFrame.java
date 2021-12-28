@@ -90,7 +90,7 @@ public class MenuFrame extends JFrame
             this.dispose();
             int width = Integer.parseInt(colsField.getText());
             int height = Integer.parseInt(rowsField.getText());
-            GameFrame gameFrame = new GameFrame(width, height,
+            new GameFrame(width, height,
                 GameParams.DIFFICULTY_MAP.get(difficultyField.getSelectedItem()));
         };
     }
