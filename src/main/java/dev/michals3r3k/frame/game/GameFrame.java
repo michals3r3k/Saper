@@ -3,6 +3,7 @@ package dev.michals3r3k.frame.game;
 import dev.michals3r3k.board.Board;
 import dev.michals3r3k.factory.BoardFactory;
 import dev.michals3r3k.frame.menu.GameParams;
+import dev.michals3r3k.user.Save;
 
 import javax.swing.*;
 
@@ -43,6 +44,8 @@ public class GameFrame extends JFrame
         tilePanel.setBounds(0, 0, boardWidth, boardHeight);
 
         boardContent.add(tilePanel, JLayeredPane.DEFAULT_LAYER);
+        Save save = new Save(null, board, gameTimer.getMinutes(), gameTimer.getSeconds());
+        save.save();
 
         this.setTitle(GameParams.APP_TITLE);
         this.setSize(cols * GameParams.TILE_SIZE + 200, rows * GameParams.TILE_SIZE + 200);

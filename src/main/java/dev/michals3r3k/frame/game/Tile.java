@@ -1,10 +1,7 @@
 package dev.michals3r3k.frame.game;
 
 import dev.michals3r3k.board.Board;
-import dev.michals3r3k.board.components.Field;
-import dev.michals3r3k.board.components.FieldType;
-import dev.michals3r3k.board.components.Position;
-import dev.michals3r3k.board.components.RegularField;
+import dev.michals3r3k.board.components.*;
 import dev.michals3r3k.factory.BoardFactory;
 import dev.michals3r3k.frame.menu.GameParams;
 
@@ -22,10 +19,9 @@ public class Tile extends JPanel implements MouseListener
     private Board board;
     private Position position;
     private GameFrame gameFrame;
-    boolean flag;
-    BoardFactory boardFactory;
+    private BoardFactory boardFactory;
     private TilePanel tilePanel;
-    JLabel label;
+    private JLabel label;
 
     public Tile(
         Board board,
@@ -36,12 +32,10 @@ public class Tile extends JPanel implements MouseListener
         this.board = board;
         this.position = position;
         this.gameFrame = gameFrame;
-        this.flag = false;
         this.tilePanel = tilePanel;
         this.boardFactory = new BoardFactory();
         this.label = new JLabel();
         this.setBackground(Color.LIGHT_GRAY);
-//        this.setBackground(new Color(255,100,100,30));
         this.setSize(new Dimension(GameParams.TILE_SIZE, GameParams.TILE_SIZE));
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         this.addMouseListener(this);
@@ -52,13 +46,16 @@ public class Tile extends JPanel implements MouseListener
     @Override
     public void mouseClicked(MouseEvent e)
     {
-        if(isLeftMouseButton(e) && !isFlag() && tilePanel.isCanPlay())
+        if(!tilePanel.isCanPlay())
+        {
+            return;
+        }
+        if(isLeftMouseButton(e) && !isFlag())
         {
             leftClickAction();
             return;
         }
-        if(isRightMouseButton(e) && tilePanel.isCanPlay()
-            && board.isCalculated())
+        if(isRightMouseButton(e) && board.isCalculated())
         {
             toggleFlag();
         }
@@ -66,11 +63,18 @@ public class Tile extends JPanel implements MouseListener
 
     private void toggleFlag()
     {
-        if(!isFlag() && !gameFrame.isCanPutFlag())
+        if(!isFlag() && !gameFrame.isCanPutFlag() || getStatus() == FieldStatus.UNCOVERED)
         {
             return;
         }
-        setFlag(!isFlag());
+        if(isFlag())
+        {
+            setStatus(FieldStatus.NORMAL);
+        }
+        else if(getStatus() == FieldStatus.NORMAL)
+        {
+            setStatus(FieldStatus.FLAG);
+        }
         if(isFlag() && gameFrame.isCanPutFlag())
         {
             gameFrame.subtractFlag();
@@ -83,6 +87,7 @@ public class Tile extends JPanel implements MouseListener
 
     private void leftClickAction()
     {
+        setStatus(FieldStatus.UNCOVERED);
         this.setBackground(Color.DARK_GRAY);
         if(tilePanel.isAllNonBombsUncovered())
         {
@@ -145,12 +150,17 @@ public class Tile extends JPanel implements MouseListener
 
     public boolean isFlag()
     {
-        return flag;
+        return getStatus() == FieldStatus.FLAG;
     }
 
-    public void setFlag(boolean flag)
+    public void setStatus(FieldStatus fieldStatus)
     {
-        this.flag = flag;
+        getField().setStatus(fieldStatus);
+    }
+
+    private FieldStatus getStatus()
+    {
+        return getField().getStatus();
     }
 
     public Field getField()

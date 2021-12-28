@@ -10,6 +10,11 @@ public class EmptyField extends Field
         super(rowPosition, colPosition);
     }
 
+    public EmptyField(int rowPosition, int colPosition, FieldStatus status)
+    {
+        super(rowPosition, colPosition, status);
+    }
+
     @Override
     public FieldType getFieldType()
     {

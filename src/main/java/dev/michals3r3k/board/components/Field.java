@@ -4,11 +4,20 @@ public abstract class Field
 {
     private final int rowPosition;
     private final int colPosition;
+    private FieldStatus status;
 
     public Field(int rowPosition, int colPosition)
     {
         this.rowPosition = rowPosition;
         this.colPosition = colPosition;
+        this.status = FieldStatus.NORMAL;
+    }
+
+    public Field(int rowPosition, int colPosition, FieldStatus status)
+    {
+        this.rowPosition = rowPosition;
+        this.colPosition = colPosition;
+        this.status = status;
     }
 
     public int getRowPosition()
@@ -19,6 +28,16 @@ public abstract class Field
     public int getColPosition()
     {
         return colPosition;
+    }
+
+    public FieldStatus getStatus()
+    {
+        return status;
+    }
+
+    public void setStatus(final FieldStatus status)
+    {
+        this.status = status;
     }
 
     public abstract FieldType getFieldType();

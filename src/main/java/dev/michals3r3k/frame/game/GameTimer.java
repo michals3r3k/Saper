@@ -44,4 +44,34 @@ public class GameTimer extends JPanel
         return timer;
     }
 
+    public int getSeconds()
+    {
+        return seconds;
+    }
+
+    public void setSeconds(final int seconds)
+    {
+        this.seconds = seconds;
+    }
+
+    public int getMinutes()
+    {
+        return minutes;
+    }
+
+    public void setMinutes(final int minutes)
+    {
+        this.minutes = minutes;
+    }
+
+    public int getElapsedTime()
+    {
+        return elapsedTime;
+    }
+
+    public void setElapsedTime(final int elapsedTime)
+    {
+        this.elapsedTime = elapsedTime;
+    }
+
 }

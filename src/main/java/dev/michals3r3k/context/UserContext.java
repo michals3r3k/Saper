@@ -31,7 +31,10 @@ public class UserContext
         return user;
     }
 
-
+    public String getCurrentUserName()
+    {
+        return user.getUsername();
+    }
 
 }
 

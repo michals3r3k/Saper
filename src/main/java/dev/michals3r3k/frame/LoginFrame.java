@@ -90,8 +90,7 @@ public class LoginFrame extends JFrame
                 String errorMessage = prepareErrorMessage(errors);
                 JOptionPane.showMessageDialog(null, errorMessage,
                     "Login failure", JOptionPane.ERROR_MESSAGE);
-            }
-            else
+            } else
             {
                 this.dispose();
                 Context context = Context.getContext();
@@ -159,8 +158,7 @@ public class LoginFrame extends JFrame
                 String errorMessage = prepareErrorMessage(errors);
                 JOptionPane.showMessageDialog(null, errorMessage,
                     "Register failure", JOptionPane.ERROR_MESSAGE);
-            }
-            else
+            } else
             {
                 createUser(username, password);
             }
@@ -184,12 +182,14 @@ public class LoginFrame extends JFrame
         userList.add(userObject);
 
         //Write JSON file
-        try (FileWriter file = new FileWriter("users.json", false)) {
+        try(FileWriter file = new FileWriter("users.json", false))
+        {
             //We can write any JSONArray or JSONObject instance to the file
             file.write(userList.toJSONString());
             file.flush();
 
-        } catch (IOException e) {
+        } catch(IOException e)
+        {
             e.printStackTrace();
         }
     }
@@ -198,10 +198,11 @@ public class LoginFrame extends JFrame
     {
         JSONParser jsonParser = new JSONParser();
         JSONArray result = null;
-        try (FileReader reader = new FileReader("users.json"))
+        try(FileReader reader = new FileReader("users.json"))
         {
             result = (JSONArray) jsonParser.parse(reader);
-        } catch (Exception e) {
+        } catch(Exception e)
+        {
             //nothing to do
         }
         return result;

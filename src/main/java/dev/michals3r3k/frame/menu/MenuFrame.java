@@ -1,6 +1,9 @@
 package dev.michals3r3k.frame.menu;
 
+import dev.michals3r3k.context.Context;
+import dev.michals3r3k.context.UserContext;
 import dev.michals3r3k.frame.game.GameFrame;
+import dev.michals3r3k.user.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,8 +25,12 @@ public class MenuFrame extends JFrame
         headerPanel.setBorder(BorderFactory.createLineBorder(Color.RED, 4));
         headerPanel.add(headerLabel);
 
-        JLabel nameLabel = new JLabel("Enter name:");
-        nameLabel.setBounds(0, 0, 200, 20);
+        Context context = Context.getContext();
+        UserContext userContext = UserContext.getUserContext(context);
+        User user = userContext.getUser();
+        JLabel nameLabel = new JLabel("Hello " + user.getUsername()+"!");
+        nameLabel.setFont(new Font(null, Font.BOLD, 20));
+        nameLabel.setBounds(200, 120, 200, 20);
         JLabel colsLabel = new JLabel("Enter board cols:");
         colsLabel.setBounds(0, 30, 200, 20);
         JLabel rowsLabel = new JLabel("Enter board rows:");
@@ -32,13 +39,10 @@ public class MenuFrame extends JFrame
         difficultyLabel.setBounds(0, 90, 200, 20);
         JPanel labelPanel = new JPanel(null);
         labelPanel.setBounds(0, 0, 200, 130);
-        labelPanel.add(nameLabel);
         labelPanel.add(colsLabel);
         labelPanel.add(rowsLabel);
         labelPanel.add(difficultyLabel);
 
-        TextField nameField = new TextField();
-        nameField.setBounds(0, 0, 200, 20);
         TextField colsField = new TextField();
         colsField.setBounds(0, 30, 40, 20);
         TextField rowsField = new TextField();
@@ -47,7 +51,6 @@ public class MenuFrame extends JFrame
         difficultyField.setBounds(0, 90, 100, 20);
         JPanel inputPanel = new JPanel(null);
         inputPanel.setBounds(210, 0, 200, 130);
-        inputPanel.add(nameField);
         inputPanel.add(colsField);
         inputPanel.add(rowsField);
         inputPanel.add(difficultyField);
@@ -60,8 +63,9 @@ public class MenuFrame extends JFrame
         JButton submitButton = new JButton("Start!");
         submitButton.setBounds(200, 330, 130, 40);
         submitButton.addActionListener(
-            submitForm(nameField, colsField, rowsField, difficultyField));
+            submitForm(colsField, rowsField, difficultyField));
 
+        this.add(nameLabel);
         this.setTitle(GameParams.APP_TITLE);
         this.setSize(550, 650);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -73,13 +77,12 @@ public class MenuFrame extends JFrame
     }
 
     private ActionListener submitForm(
-        TextField nameField,
         TextField colsField,
         TextField rowsField,
         JComboBox difficultyField)
     {
         return e -> {
-            List<FormError> errors = validateFormFields(nameField, colsField, rowsField);
+            List<FormError> errors = validateFormFields(colsField, rowsField);
             if(!errors.isEmpty())
             {
                 String errorMessage = prepareErrorMessage(errors);
@@ -110,12 +113,11 @@ public class MenuFrame extends JFrame
     }
 
     private List<FormError> validateFormFields(
-        TextField nameField,
         TextField colsField,
         TextField rowsField)
     {
         List<FormError> errors = new ArrayList<>();
-        if(isAnyFieldEmpty(nameField, colsField, rowsField))
+        if(isAnyFieldEmpty(colsField, rowsField))
         {
             errors.add(FormError.NOT_ALL_FILLED);
         }
@@ -146,12 +148,10 @@ public class MenuFrame extends JFrame
     }
 
     private boolean isAnyFieldEmpty(
-        TextField nameField,
         TextField colsField,
         TextField rowsField)
     {
-        return nameField.getText().isBlank()
-            || colsField.getText().isBlank()
+        return colsField.getText().isBlank()
             || rowsField.getText().isBlank();
     }
 

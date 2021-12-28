@@ -10,6 +10,11 @@ public class BombField extends Field
         super(rowPosition, colPosition);
     }
 
+    public BombField(int rowPosition, int colPosition, FieldStatus status)
+    {
+        super(rowPosition, colPosition, status);
+    }
+
     @Override
     public FieldType getFieldType() {
         return FieldType.BOMB;

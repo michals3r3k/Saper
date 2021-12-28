@@ -10,8 +10,8 @@ public class Board
     private Field[][] fields;
     private final int bombQuantity;
     private boolean calculated;
-    private int width;
-    private int height;
+    private final int width;
+    private final int height;
 
     public Board(Field[][] fields, int bombQuantity)
     {

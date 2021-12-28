@@ -14,6 +14,12 @@ public class RegularField extends Field
         this.value = value;
     }
 
+    public RegularField(int rowPosition, int colPosition, FieldStatus status, int value)
+    {
+        super(rowPosition, colPosition, status);
+        this.value = value;
+    }
+
     public int getValue()
     {
         return value;

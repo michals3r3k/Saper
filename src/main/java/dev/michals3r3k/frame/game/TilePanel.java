@@ -1,10 +1,7 @@
 package dev.michals3r3k.frame.game;
 
 import dev.michals3r3k.board.Board;
-import dev.michals3r3k.board.components.Field;
-import dev.michals3r3k.board.components.FieldType;
-import dev.michals3r3k.board.components.Position;
-import dev.michals3r3k.board.components.RegularField;
+import dev.michals3r3k.board.components.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,6 +70,7 @@ public class TilePanel extends JPanel
         List<Tile> neighbourTiles = getNeighbourTiles(x, y);
         neighbourTiles.forEach(t -> {
             t.setBackground(Color.DARK_GRAY);
+            t.setStatus(FieldStatus.UNCOVERED);
             if(t.getFieldType() == FieldType.REGULAR)
             {
                 t.setValue(((RegularField) board.getField(t.getPosX(), t.getPosY())).getValue());
