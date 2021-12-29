@@ -1,10 +1,10 @@
 package dev.michals3r3k.factory;
 
-import dev.michals3r3k.board.Board;
-import dev.michals3r3k.board.components.BombField;
-import dev.michals3r3k.board.components.EmptyField;
-import dev.michals3r3k.board.components.Field;
-import dev.michals3r3k.board.components.RegularField;
+import dev.michals3r3k.model.board.Board;
+import dev.michals3r3k.model.board.components.BombField;
+import dev.michals3r3k.model.board.components.EmptyField;
+import dev.michals3r3k.model.board.components.Field;
+import dev.michals3r3k.model.board.components.RegularField;
 import dev.michals3r3k.frame.game.GameFrame;
 
 import java.util.Random;

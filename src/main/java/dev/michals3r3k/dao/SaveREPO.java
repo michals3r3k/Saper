@@ -1,13 +1,13 @@
-package dev.michals3r3k.factory;
+package dev.michals3r3k.dao;
 
-import dev.michals3r3k.board.Board;
-import dev.michals3r3k.board.components.Field;
-import dev.michals3r3k.board.components.FieldType;
-import dev.michals3r3k.board.components.RegularField;
+import dev.michals3r3k.model.board.Board;
+import dev.michals3r3k.model.board.components.Field;
+import dev.michals3r3k.model.board.components.FieldType;
+import dev.michals3r3k.model.board.components.RegularField;
 import dev.michals3r3k.context.Context;
 import dev.michals3r3k.context.UserContext;
-import dev.michals3r3k.user.Save;
-import dev.michals3r3k.user.SaveId;
+import dev.michals3r3k.model.save.Save;
+import dev.michals3r3k.model.save.SaveId;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -21,26 +21,21 @@ public class SaveREPO implements Saveable
     private static DateTimeFormatter DTF =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    private SaveDAO saveDAO;
-
-    public SaveREPO()
-    {
-        this.saveDAO = new SaveDAO();
-    }
+    private final SaveDAO saveDAO = new SaveDAO();
 
     @Override
     public void save(final Save save)
     {
-        JSONObject saveDetails = new JSONObject();
-        saveDetails.put("minutes", save.getMinutes());
-        saveDetails.put("seconds", save.getSeconds());
-        saveDetails.put("board", getJsonBoard(save.getBoard()));
         if(save.getId() == null)
         {
             Context context = Context.getContext();
             UserContext userContext = UserContext.getUserContext(context);
             save.setId(new SaveId(getFirstFreeSaveId(), userContext.getCurrentUserName()));
         }
+        JSONObject saveDetails = new JSONObject();
+        saveDetails.put("minutes", save.getMinutes());
+        saveDetails.put("seconds", save.getSeconds());
+        saveDetails.put("board", getJsonBoard(save.getBoard()));
         saveDetails.put("id", getJsonId(save.getId()));
         saveDetails.put("date", DTF.format(save.getSaveTime()));
 
@@ -68,8 +63,6 @@ public class SaveREPO implements Saveable
     @Override
     public void update(final Save save)
     {
-//        JSONArray jsonSaves = saveDAO.getJSONSaves();
-//        jsonSaves.re
 
     }
 

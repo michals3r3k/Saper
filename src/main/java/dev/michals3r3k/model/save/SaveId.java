@@ -1,4 +1,4 @@
-package dev.michals3r3k.user;
+package dev.michals3r3k.model.save;
 
 import java.util.Objects;
 

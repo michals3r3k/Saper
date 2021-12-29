@@ -1,13 +1,13 @@
 package dev.michals3r3k.frame.game;
 
-import dev.michals3r3k.board.Board;
+import dev.michals3r3k.model.board.Board;
 import dev.michals3r3k.factory.BoardFactory;
-import dev.michals3r3k.factory.SaveREPO;
+import dev.michals3r3k.dao.SaveREPO;
 import dev.michals3r3k.frame.menu.GameParams;
 import dev.michals3r3k.frame.menu.MenuFrame;
-import dev.michals3r3k.user.Save;
-import dev.michals3r3k.user.SaveId;
-import dev.michals3r3k.factory.Saveable;
+import dev.michals3r3k.model.save.Save;
+import dev.michals3r3k.model.save.SaveId;
+import dev.michals3r3k.dao.Saveable;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 
 public class GameFrame extends JFrame
 {
+    private final BoardFactory boardFactory = new BoardFactory();
     private final JLabel flagLabel;
     private Integer flagQuantity;
     private final GameTimer gameTimer;
@@ -43,13 +44,12 @@ public class GameFrame extends JFrame
         flagPanel.add(flagLabel);
         flagPanel.add(label);
 
-        JLayeredPane boardContent = new JLayeredPane();
-        boardContent.setBounds(100, 150, boardWidth, boardHeight);
-
-        Board board = new BoardFactory().getBoard(rows, cols, saturation);
+        Board board = boardFactory.getBoard(rows, cols, saturation);
         TilePanel tilePanel = new TilePanel(board, this);
         tilePanel.setBounds(0, 0, boardWidth, boardHeight);
 
+        JLayeredPane boardContent = new JLayeredPane();
+        boardContent.setBounds(100, 150, boardWidth, boardHeight);
         boardContent.add(tilePanel, JLayeredPane.DEFAULT_LAYER);
 
         JButton saveButton = new JButton("Save Game");

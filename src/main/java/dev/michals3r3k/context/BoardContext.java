@@ -1,6 +1,6 @@
 package dev.michals3r3k.context;
 
-import dev.michals3r3k.board.Board;
+import dev.michals3r3k.model.board.Board;
 
 public class BoardContext
 {

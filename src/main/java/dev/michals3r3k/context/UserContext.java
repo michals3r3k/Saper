@@ -1,6 +1,6 @@
 package dev.michals3r3k.context;
 
-import dev.michals3r3k.user.User;
+import dev.michals3r3k.model.User;
 
 public class UserContext
 {

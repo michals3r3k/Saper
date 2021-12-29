@@ -1,6 +1,6 @@
-package dev.michals3r3k.factory;
+package dev.michals3r3k.dao;
 
-import dev.michals3r3k.user.Save;
+import dev.michals3r3k.model.save.Save;
 
 public interface Saveable
 {

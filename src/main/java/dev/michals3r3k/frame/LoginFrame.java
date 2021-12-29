@@ -4,7 +4,7 @@ import dev.michals3r3k.context.Context;
 import dev.michals3r3k.context.UserContext;
 import dev.michals3r3k.frame.menu.GameParams;
 import dev.michals3r3k.frame.menu.MenuFrame;
-import dev.michals3r3k.user.User;
+import dev.michals3r3k.model.User;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

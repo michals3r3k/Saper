@@ -3,7 +3,7 @@ package dev.michals3r3k.frame.menu;
 import dev.michals3r3k.context.Context;
 import dev.michals3r3k.context.UserContext;
 import dev.michals3r3k.frame.game.GameFrame;
-import dev.michals3r3k.user.User;
+import dev.michals3r3k.model.User;
 
 import javax.swing.*;
 import java.awt.*;

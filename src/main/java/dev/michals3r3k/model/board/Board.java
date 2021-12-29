@@ -1,6 +1,6 @@
-package dev.michals3r3k.board;
+package dev.michals3r3k.model.board;
 
-import dev.michals3r3k.board.components.Field;
+import dev.michals3r3k.model.board.components.Field;
 
 /**
  * A class that represents the saper's game board.

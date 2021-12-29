@@ -1,9 +1,9 @@
 package dev.michals3r3k.factory;
 
-import dev.michals3r3k.board.Board;
-import dev.michals3r3k.board.components.Field;
-import dev.michals3r3k.board.components.FieldType;
-import dev.michals3r3k.board.components.RegularField;
+import dev.michals3r3k.model.board.Board;
+import dev.michals3r3k.model.board.components.Field;
+import dev.michals3r3k.model.board.components.FieldType;
+import dev.michals3r3k.model.board.components.RegularField;
 import org.junit.Before;
 import org.junit.Test;
 

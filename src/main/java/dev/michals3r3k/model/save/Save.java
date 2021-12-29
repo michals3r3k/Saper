@@ -1,6 +1,6 @@
-package dev.michals3r3k.user;
+package dev.michals3r3k.model.save;
 
-import dev.michals3r3k.board.Board;
+import dev.michals3r3k.model.board.Board;
 
 import java.time.LocalDateTime;
 

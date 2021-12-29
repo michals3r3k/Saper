@@ -1,7 +1,7 @@
 package dev.michals3r3k.frame.game;
 
-import dev.michals3r3k.board.Board;
-import dev.michals3r3k.board.components.*;
+import dev.michals3r3k.model.board.Board;
+import dev.michals3r3k.model.board.components.*;
 
 import javax.swing.*;
 import java.awt.*;

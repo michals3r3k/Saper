@@ -1,9 +1,10 @@
-package dev.michals3r3k.factory;
+package dev.michals3r3k.dao;
 
-import dev.michals3r3k.board.Board;
-import dev.michals3r3k.board.components.*;
-import dev.michals3r3k.user.Save;
-import dev.michals3r3k.user.SaveId;
+import dev.michals3r3k.Logger;
+import dev.michals3r3k.model.board.Board;
+import dev.michals3r3k.model.board.components.*;
+import dev.michals3r3k.model.save.Save;
+import dev.michals3r3k.model.save.SaveId;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -19,8 +20,11 @@ import java.util.stream.Collectors;
 
 public class SaveDAO
 {
+    private static final String SAVE_FILENAME = "saves.json";
     private static DateTimeFormatter DTF =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    private final Logger logger = new Logger();
 
     public Save getSaveById(SaveId id)
     {
@@ -46,12 +50,12 @@ public class SaveDAO
     {
         JSONParser parser = new JSONParser();
         JSONArray jsonArray = null;
-        try(FileReader fr = new FileReader("saves.json"))
+        try(FileReader fr = new FileReader(SAVE_FILENAME))
         {
             jsonArray = (JSONArray) parser.parse(fr);
         } catch(ParseException e)
         {
-            e.printStackTrace();
+            logger.warn(SAVE_FILENAME + " is empty");
         } catch(IOException e)
         {
             e.printStackTrace();
