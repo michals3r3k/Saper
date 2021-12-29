@@ -69,9 +69,9 @@ public class Tile extends JPanel implements MouseListener
         }
         if(isFlag())
         {
-            setStatus(FieldStatus.NORMAL);
+            setStatus(FieldStatus.COVERED);
         }
-        else if(getStatus() == FieldStatus.NORMAL)
+        else if(getStatus() == FieldStatus.COVERED)
         {
             setStatus(FieldStatus.FLAG);
         }

@@ -1,5 +1,7 @@
 package dev.michals3r3k.user;
 
+import java.util.Objects;
+
 public class SaveId
 {
     private Long saveId;
@@ -19,6 +21,28 @@ public class SaveId
     public String getUsername()
     {
         return username;
+    }
+
+    @Override
+    public boolean equals(final Object o)
+    {
+        if(this == o)
+        {
+            return true;
+        }
+        if(o == null || getClass() != o.getClass())
+        {
+            return false;
+        }
+        final SaveId id = (SaveId) o;
+        return Objects.equals(saveId, id.saveId)
+            && Objects.equals(username, id.username);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(saveId, username);
     }
 
 }

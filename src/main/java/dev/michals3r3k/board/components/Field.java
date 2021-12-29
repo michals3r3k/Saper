@@ -10,7 +10,7 @@ public abstract class Field
     {
         this.rowPosition = rowPosition;
         this.colPosition = colPosition;
-        this.status = FieldStatus.NORMAL;
+        this.status = FieldStatus.COVERED;
     }
 
     public Field(int rowPosition, int colPosition, FieldStatus status)

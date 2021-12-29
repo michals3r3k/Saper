@@ -2,16 +2,23 @@ package dev.michals3r3k.frame.game;
 
 import dev.michals3r3k.board.Board;
 import dev.michals3r3k.factory.BoardFactory;
+import dev.michals3r3k.factory.SaveREPO;
 import dev.michals3r3k.frame.menu.GameParams;
+import dev.michals3r3k.frame.menu.MenuFrame;
 import dev.michals3r3k.user.Save;
+import dev.michals3r3k.user.SaveId;
+import dev.michals3r3k.factory.Saveable;
 
 import javax.swing.*;
+import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
 
 public class GameFrame extends JFrame
 {
-    final JLabel flagLabel;
-    Integer flagQuantity;
-    final GameTimer gameTimer;
+    private final JLabel flagLabel;
+    private Integer flagQuantity;
+    private final GameTimer gameTimer;
+    private SaveId saveId;
 
     public GameFrame(int cols, int rows, int saturation)
     {
@@ -44,17 +51,52 @@ public class GameFrame extends JFrame
         tilePanel.setBounds(0, 0, boardWidth, boardHeight);
 
         boardContent.add(tilePanel, JLayeredPane.DEFAULT_LAYER);
-        Save save = new Save(null, board, gameTimer.getMinutes(), gameTimer.getSeconds());
-        save.save();
+
+        JButton saveButton = new JButton("Save Game");
+        saveButton.setBounds(gameTimer.getX() + gameTimer.getWidth() + 50,
+            gameTimer.getY(), 130, 40);
+        saveButton.addActionListener(saveGame(board));
+
+        JButton menuButton = new JButton("Main menu");
+        menuButton.setBounds(saveButton.getX(),
+            saveButton.getY() + saveButton.getHeight() + 10, 130, 40);
+        menuButton.addActionListener(mainMenu());
+
+
+        int rightEdge = saveButton.getWidth() + saveButton.getX() + 50;
+        int gamePanelAreaWidth = cols * GameParams.TILE_SIZE + 200;
+        int gamePanelAreaHeight = rows * GameParams.TILE_SIZE + 200;
 
         this.setTitle(GameParams.APP_TITLE);
-        this.setSize(cols * GameParams.TILE_SIZE + 200, rows * GameParams.TILE_SIZE + 200);
+        this.setSize(Math.max(gamePanelAreaWidth, rightEdge), gamePanelAreaHeight);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLayout(null);
         this.add(flagPanel);
         this.add(boardContent);
         this.add(gameTimer);
+        this.add(saveButton);
+        this.add(menuButton);
         this.setVisible(true);
+    }
+
+    private ActionListener mainMenu()
+    {
+        return (e) ->{
+            this.dispose();
+            new MenuFrame();
+        };
+    }
+
+    private ActionListener saveGame(Board board)
+    {
+        return (e) ->{
+            Save save = new Save(saveId, board, gameTimer.getMinutes(),
+                gameTimer.getSeconds(), LocalDateTime.now());
+            Saveable saveable = new SaveREPO();
+            saveable.save(save);
+            this.saveId = save.getId();
+            System.out.println(saveId.getSaveId() + " | " + saveId.getUsername());
+        };
     }
 
     public Integer getFlagQuantity()
