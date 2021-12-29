@@ -25,13 +25,8 @@ public class GameFrame extends JFrame
     {
         this.flagQuantity = null;
         this.flagLabel = new JLabel();
-
         this.gameTimer = new GameTimer();
-        gameTimer.setBounds(260, 20, 160, 100);
-
-        int boardWidth = cols * GameParams.TILE_SIZE;
-        int boardHeight = rows * GameParams.TILE_SIZE;
-
+        Board board = boardFactory.getBoard(rows, cols, saturation);
         flagLabel.setText("");
         flagLabel.setBounds(140, 0, 40, 20);
 
@@ -44,13 +39,7 @@ public class GameFrame extends JFrame
         flagPanel.add(flagLabel);
         flagPanel.add(label);
 
-        Board board = boardFactory.getBoard(rows, cols, saturation);
-        TilePanel tilePanel = new TilePanel(board, this);
-        tilePanel.setBounds(0, 0, boardWidth, boardHeight);
-
-        JLayeredPane boardContent = new JLayeredPane();
-        boardContent.setBounds(100, 150, boardWidth, boardHeight);
-        boardContent.add(tilePanel, JLayeredPane.DEFAULT_LAYER);
+        gameTimer.setBounds(260, 20, 160, 100);
 
         JButton saveButton = new JButton("Save Game");
         saveButton.setBounds(gameTimer.getX() + gameTimer.getWidth() + 50,
@@ -62,6 +51,14 @@ public class GameFrame extends JFrame
             saveButton.getY() + saveButton.getHeight() + 10, 130, 40);
         menuButton.addActionListener(mainMenu());
 
+        TilePanel tilePanel = new TilePanel(board, this);
+        int boardWidth = cols * GameParams.TILE_SIZE;
+        int boardHeight = rows * GameParams.TILE_SIZE;
+        tilePanel.setBounds(0, 0, boardWidth, boardHeight);
+
+        JLayeredPane boardContent = new JLayeredPane();
+        boardContent.setBounds(100, 150, boardWidth, boardHeight);
+        boardContent.add(tilePanel, JLayeredPane.DEFAULT_LAYER);
 
         int rightEdge = saveButton.getWidth() + saveButton.getX() + 50;
         int gamePanelAreaWidth = cols * GameParams.TILE_SIZE + 200;
