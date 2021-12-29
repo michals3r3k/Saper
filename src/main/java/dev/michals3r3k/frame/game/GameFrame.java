@@ -27,29 +27,7 @@ public class GameFrame extends JFrame
         this.flagLabel = new JLabel();
         this.gameTimer = new GameTimer();
         Board board = boardFactory.getBoard(rows, cols, saturation);
-        flagLabel.setText("");
-        flagLabel.setBounds(140, 0, 40, 20);
-
-        JLabel label = new JLabel("Flags remaining:");
-        label.setBounds(0, 0, 130, 20);
-
-        JPanel flagPanel = new JPanel();
-        flagPanel.setLayout(null);
-        flagPanel.setBounds(50, 50, 180, 20);
-        flagPanel.add(flagLabel);
-        flagPanel.add(label);
-
-        gameTimer.setBounds(260, 20, 160, 100);
-
-        JButton saveButton = new JButton("Save Game");
-        saveButton.setBounds(gameTimer.getX() + gameTimer.getWidth() + 50,
-            gameTimer.getY(), 130, 40);
-        saveButton.addActionListener(saveGame(board));
-
-        JButton menuButton = new JButton("Main menu");
-        menuButton.setBounds(saveButton.getX(),
-            saveButton.getY() + saveButton.getHeight() + 10, 130, 40);
-        menuButton.addActionListener(mainMenu());
+        JPanel headerPanel = getHeader(board);
 
         TilePanel tilePanel = new TilePanel(board, this);
         int boardWidth = cols * GameParams.TILE_SIZE;
@@ -60,25 +38,80 @@ public class GameFrame extends JFrame
         boardContent.setBounds(100, 150, boardWidth, boardHeight);
         boardContent.add(tilePanel, JLayeredPane.DEFAULT_LAYER);
 
-        int rightEdge = saveButton.getWidth() + saveButton.getX() + 50;
-        int gamePanelAreaWidth = cols * GameParams.TILE_SIZE + 200;
-        int gamePanelAreaHeight = rows * GameParams.TILE_SIZE + 200;
+        int frameWidth = centrifyAndGetFrameWidth(headerPanel, boardContent);
+        int gamePanelHeight = boardHeight + 200;
 
         this.setTitle(GameParams.APP_TITLE);
-        this.setSize(Math.max(gamePanelAreaWidth, rightEdge), gamePanelAreaHeight);
+        this.setSize(frameWidth, gamePanelHeight);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLayout(null);
-        this.add(flagPanel);
+        this.add(headerPanel);
         this.add(boardContent);
-        this.add(gameTimer);
-        this.add(saveButton);
-        this.add(menuButton);
         this.setVisible(true);
+    }
+
+    private int centrifyAndGetFrameWidth(final JPanel headerPanel,
+                                         final JLayeredPane boardContent)
+    {
+        int headerWidth = headerPanel.getWidth() + (2 * headerPanel.getX());
+        int gamePanelWidth = boardContent.getWidth() + (2 * boardContent.getX());
+        int frameWidth = Math.max(gamePanelWidth, headerWidth);
+        if(frameWidth != headerWidth)
+        {
+            int x = frameWidth - headerWidth;
+            headerPanel.setBounds(x / 2, headerPanel.getY(),
+                headerPanel.getWidth(), headerPanel.getHeight());
+        } else
+        {
+            int x = frameWidth - gamePanelWidth;
+            boardContent.setBounds(100 + (x / 2), boardContent.getY(),
+                boardContent.getWidth(), boardContent.getHeight());
+        }
+        return frameWidth;
+    }
+
+    private JPanel getHeader(Board board)
+    {
+        JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(null);
+        flagLabel.setText("");
+        flagLabel.setBounds(140, 0, 40, 20);
+
+        JLabel label = new JLabel("Flags remaining:");
+        label.setBounds(0, 0, 130, 20);
+
+        JPanel flagPanel = new JPanel();
+        flagPanel.setLayout(null);
+        flagPanel.setBounds(0, 30, 180, 20);
+        flagPanel.add(flagLabel);
+        flagPanel.add(label);
+
+        gameTimer.setBounds(flagPanel.getX() + flagPanel.getWidth() + 30,
+            0, 160, 100);
+
+        JButton saveButton = new JButton("Save Game");
+        saveButton.setBounds(gameTimer.getX() + gameTimer.getWidth() + 50,
+            0, 130, 40);
+        saveButton.addActionListener(saveGame(board));
+
+        JButton menuButton = new JButton("Main menu");
+        menuButton.setBounds(saveButton.getX(),
+            saveButton.getY() + saveButton.getHeight() + 10, 130, 40);
+        menuButton.addActionListener(mainMenu());
+
+        headerPanel.add(flagPanel);
+        headerPanel.add(gameTimer);
+        headerPanel.add(saveButton);
+        headerPanel.add(menuButton);
+        headerPanel.setBounds(20, 20,
+            saveButton.getX() + saveButton.getWidth() + 10,
+            menuButton.getY() + menuButton.getHeight() + 10);
+        return headerPanel;
     }
 
     private ActionListener mainMenu()
     {
-        return (e) ->{
+        return (e) -> {
             this.dispose();
             new MenuFrame();
         };
@@ -86,7 +119,7 @@ public class GameFrame extends JFrame
 
     private ActionListener saveGame(Board board)
     {
-        return (e) ->{
+        return (e) -> {
             Save save = new Save(saveId, board, gameTimer.getMinutes(),
                 gameTimer.getSeconds(), LocalDateTime.now());
             Saveable saveable = new SaveREPO();
