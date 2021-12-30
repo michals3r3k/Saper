@@ -16,7 +16,7 @@ public class Context
         return context;
     }
 
-    private Map<Class<?>, Object> parameterMap;
+    private final Map<Class<?>, Object> parameterMap;
 
     private Context()
     {

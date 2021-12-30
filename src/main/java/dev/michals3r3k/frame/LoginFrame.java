@@ -1,6 +1,7 @@
 package dev.michals3r3k.frame;
 
 import dev.michals3r3k.context.Context;
+import dev.michals3r3k.context.SaveContext;
 import dev.michals3r3k.context.UserContext;
 import dev.michals3r3k.frame.menu.GameParams;
 import dev.michals3r3k.frame.menu.MenuFrame;
@@ -97,6 +98,10 @@ public class LoginFrame extends JFrame
                 UserContext userContext = UserContext.getUserContext(context);
                 userContext.setUser(getUser(username));
                 context.setParameter(userContext);
+
+                SaveContext saveContext = SaveContext.getSaveContext(context);
+                context.setParameter(saveContext);
+
                 new MenuFrame();
             }
         };

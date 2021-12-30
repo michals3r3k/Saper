@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class SaveDAO
 {
     private static final String SAVE_FILENAME = "saves.json";
-    private static DateTimeFormatter DTF =
+    private static final DateTimeFormatter DTF =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final Logger logger = new Logger();
@@ -32,6 +32,13 @@ public class SaveDAO
             .filter(s -> id.equals(s.getId()))
             .findAny()
             .orElse(null);
+    }
+
+    public List<Save> getSavesByUsername(String username)
+    {
+        return getSaves().stream()
+            .filter(save -> save.getId().getUsername().equals(username))
+            .collect(Collectors.toList());
     }
 
     public List<Save> getSaves()
@@ -93,7 +100,10 @@ public class SaveDAO
         return new Board(fields, bombQuantity);
     }
 
-    private Field[][] getFields(final JSONObject jsonBoard, final int width, final int height)
+    private Field[][] getFields(
+        final JSONObject jsonBoard,
+        final int width,
+        final int height)
     {
         Field[][] fields = new Field[width][height];
         for(Object rows : (JSONArray) jsonBoard.get("fields"))

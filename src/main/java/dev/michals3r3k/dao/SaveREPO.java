@@ -1,11 +1,12 @@
 package dev.michals3r3k.dao;
 
+import dev.michals3r3k.Logger;
+import dev.michals3r3k.context.Context;
+import dev.michals3r3k.context.UserContext;
 import dev.michals3r3k.model.board.Board;
 import dev.michals3r3k.model.board.components.Field;
 import dev.michals3r3k.model.board.components.FieldType;
 import dev.michals3r3k.model.board.components.RegularField;
-import dev.michals3r3k.context.Context;
-import dev.michals3r3k.context.UserContext;
 import dev.michals3r3k.model.save.Save;
 import dev.michals3r3k.model.save.SaveId;
 import org.json.simple.JSONArray;
@@ -20,18 +21,73 @@ public class SaveREPO implements Saveable
 {
     private static DateTimeFormatter DTF =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private Logger logger = new Logger();
 
     private final SaveDAO saveDAO = new SaveDAO();
 
     @Override
-    public void save(final Save save)
+    public void saveOrUpdate(final Save save)
     {
         if(save.getId() == null)
         {
-            Context context = Context.getContext();
-            UserContext userContext = UserContext.getUserContext(context);
-            save.setId(new SaveId(getFirstFreeSaveId(), userContext.getCurrentUserName()));
+            save(save);
+            return;
         }
+        update(save);
+    }
+
+    @Override
+    public void save(final Save save)
+    {
+        if(save.getId() != null)
+        {
+            throw new IllegalArgumentException("id should be null");
+        }
+        save.setId(getNextSaveId());
+        JSONArray saves = saveDAO.getJSONSaves();
+        saves.add(convertToJson(save));
+        write(saves);
+        logger.info("New save has been saved");
+    }
+
+    private SaveId getNextSaveId()
+    {
+        Context context = Context.getContext();
+        UserContext userContext = UserContext.getUserContext(context);
+        return new SaveId(getFirstFreeSaveId(), userContext.getCurrentUserName());
+    }
+
+    @Override
+    public void update(final Save save)
+    {
+        JSONArray jsonSaves = saveDAO.getJSONSaves();
+        JSONObject saveFound = getSaved(jsonSaves, save);
+        jsonSaves.remove(saveFound);
+        jsonSaves.add(convertToJson(save));
+        write(jsonSaves);
+        logger.info("Save has been updated");
+    }
+
+    private JSONObject getSaved(final JSONArray jsonSaves, Save save)
+    {
+        for(final Object obj : jsonSaves)
+        {
+            JSONObject jsonSave = (JSONObject) obj;
+            JSONObject jsonSaveDetails = (JSONObject) jsonSave.get("save");
+            JSONObject jsonId = (JSONObject) jsonSaveDetails.get("id");
+            long saveId = (Long) jsonId.get("saveId");
+            String username = (String) jsonId.get("username");
+            SaveId id = new SaveId(saveId, username);
+            if(id.equals(save.getId()))
+            {
+                return jsonSave;
+            }
+        }
+        throw new IllegalStateException("Given save does not exists");
+    }
+
+    private JSONObject convertToJson(final Save save)
+    {
         JSONObject saveDetails = new JSONObject();
         saveDetails.put("minutes", save.getMinutes());
         saveDetails.put("seconds", save.getSeconds());
@@ -41,11 +97,7 @@ public class SaveREPO implements Saveable
 
         JSONObject jsonSave = new JSONObject();
         jsonSave.put("save", saveDetails);
-
-        JSONArray saves = saveDAO.getJSONSaves();
-        System.out.println(saves.toJSONString());
-        saves.add(jsonSave);
-        write(saves);
+        return jsonSave;
     }
 
     private void write(JSONArray jsonArray)
@@ -57,19 +109,6 @@ public class SaveREPO implements Saveable
         {
             e.printStackTrace();
         }
-    }
-
-
-    @Override
-    public void update(final Save save)
-    {
-
-    }
-
-    @Override
-    public void saveOrUpdate(final Save save)
-    {
-
     }
 
     private JSONObject getJsonBoard(Board board)

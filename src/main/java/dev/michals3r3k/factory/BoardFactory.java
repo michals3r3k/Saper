@@ -37,7 +37,7 @@ public class BoardFactory
                     break;
                 }
             }
-            if(foundX!=null)
+            if(foundX != null)
             {
                 break;
             }
@@ -160,7 +160,7 @@ public class BoardFactory
         {
             ++bombCount;
         }
-        if(bombCount==0)
+        if(bombCount == 0)
         {
             return currentField;
         }

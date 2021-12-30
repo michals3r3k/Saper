@@ -1,13 +1,15 @@
 package dev.michals3r3k.frame.game;
 
-import dev.michals3r3k.model.board.Board;
-import dev.michals3r3k.factory.BoardFactory;
+import dev.michals3r3k.context.Context;
+import dev.michals3r3k.context.SaveContext;
 import dev.michals3r3k.dao.SaveREPO;
+import dev.michals3r3k.dao.Saveable;
+import dev.michals3r3k.factory.BoardFactory;
 import dev.michals3r3k.frame.menu.GameParams;
 import dev.michals3r3k.frame.menu.MenuFrame;
+import dev.michals3r3k.model.board.Board;
 import dev.michals3r3k.model.save.Save;
 import dev.michals3r3k.model.save.SaveId;
-import dev.michals3r3k.dao.Saveable;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -19,7 +21,6 @@ public class GameFrame extends JFrame
     private final JLabel flagLabel;
     private Integer flagQuantity;
     private final GameTimer gameTimer;
-    private SaveId saveId;
 
     public GameFrame(int cols, int rows, int saturation)
     {
@@ -50,8 +51,9 @@ public class GameFrame extends JFrame
         this.setVisible(true);
     }
 
-    private int centrifyAndGetFrameWidth(final JPanel headerPanel,
-                                         final JLayeredPane boardContent)
+    private int centrifyAndGetFrameWidth(
+        final JPanel headerPanel,
+        final JLayeredPane boardContent)
     {
         int headerWidth = headerPanel.getWidth() + (2 * headerPanel.getX());
         int gamePanelWidth = boardContent.getWidth() + (2 * boardContent.getX());
@@ -113,6 +115,9 @@ public class GameFrame extends JFrame
     {
         return (e) -> {
             this.dispose();
+            Context context = Context.getContext();
+            SaveContext saveContext = SaveContext.getSaveContext(context);
+            saveContext.setSave(null);
             new MenuFrame();
         };
     }
@@ -120,13 +125,20 @@ public class GameFrame extends JFrame
     private ActionListener saveGame(Board board)
     {
         return (e) -> {
-            Save save = new Save(saveId, board, gameTimer.getMinutes(),
-                gameTimer.getSeconds(), LocalDateTime.now());
+            Context context = Context.getContext();
+            SaveContext saveContext = SaveContext.getSaveContext(context);
             Saveable saveable = new SaveREPO();
-            saveable.save(save);
-            this.saveId = save.getId();
-            System.out.println(saveId.getSaveId() + " | " + saveId.getUsername());
+            Save save = getSave(saveContext, board);
+            saveable.saveOrUpdate(save);
+            saveContext.setSave(save);
         };
+    }
+
+    private Save getSave(final SaveContext saveContext, Board board)
+    {
+        SaveId saveIdOrNull = saveContext.getSaveIdOrNull();
+        return new Save(saveIdOrNull, board, gameTimer.getMinutes(),
+            gameTimer.getSeconds(), LocalDateTime.now());
     }
 
     public Integer getFlagQuantity()

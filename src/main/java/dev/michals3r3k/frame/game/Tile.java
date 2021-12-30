@@ -225,7 +225,7 @@ public class Tile extends JPanel implements MouseListener
     @Override
     public int hashCode()
     {
-        return Objects.hash(position);
+        return Objects.hashCode(position);
     }
 
 }
