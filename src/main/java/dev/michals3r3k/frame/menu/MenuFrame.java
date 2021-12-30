@@ -1,7 +1,9 @@
 package dev.michals3r3k.frame.menu;
 
 import dev.michals3r3k.context.Context;
+import dev.michals3r3k.context.SaveContext;
 import dev.michals3r3k.context.UserContext;
+import dev.michals3r3k.frame.LoginFrame;
 import dev.michals3r3k.frame.game.GameFrame;
 import dev.michals3r3k.model.User;
 
@@ -28,7 +30,7 @@ public class MenuFrame extends JFrame
         Context context = Context.getContext();
         UserContext userContext = UserContext.getUserContext(context);
         User user = userContext.getUser();
-        JLabel nameLabel = new JLabel("Hello " + user.getUsername()+"!");
+        JLabel nameLabel = new JLabel("Hello " + user.getUsername() + "!");
         nameLabel.setFont(new Font(null, Font.BOLD, 20));
         nameLabel.setBounds(200, 120, 200, 20);
         JLabel colsLabel = new JLabel("Enter board cols:");
@@ -65,6 +67,14 @@ public class MenuFrame extends JFrame
         submitButton.addActionListener(
             submitForm(colsField, rowsField, difficultyField));
 
+        JButton loadButton = new JButton("Load game");
+        loadButton.setBounds(200, 380, 130, 40);
+        loadButton.addActionListener(getLoadFrame());
+
+        JButton logoutButton = new JButton("Log out");
+        logoutButton.setBounds(200, 430, 130, 40);
+        logoutButton.addActionListener(logout());
+
         this.add(nameLabel);
         this.setTitle(GameParams.APP_TITLE);
         this.setSize(550, 650);
@@ -74,6 +84,29 @@ public class MenuFrame extends JFrame
         this.add(headerPanel);
         this.add(formContainer);
         this.add(submitButton);
+        this.add(loadButton);
+        this.add(logoutButton);
+    }
+
+    private ActionListener logout()
+    {
+        return e->{
+            Context context = Context.getContext();
+            SaveContext saveContext = SaveContext.getSaveContext(context);
+            saveContext.setSave(null);
+            UserContext userContext = UserContext.getUserContext(context);
+            userContext.setUser(null);
+            this.dispose();
+            new LoginFrame();
+        };
+    }
+
+    private ActionListener getLoadFrame()
+    {
+        return e -> {
+            this.dispose();
+            new LoadFrame();
+        };
     }
 
     private ActionListener submitForm(

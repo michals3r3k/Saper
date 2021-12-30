@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,6 +51,7 @@ public class SaveDAO
         }
         return ((List<Object>) jsonSaves).stream()
             .map(this::getSave)
+            .sorted(Comparator.comparing(Save::getSaveTime).reversed())
             .collect(Collectors.toList());
     }
 
