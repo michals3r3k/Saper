@@ -43,7 +43,12 @@ public class BoardFactory
             }
         }
         Field tmp = fields[x][y];
-        fields[x][y] = fields[foundX][foundY];
+        tmp.setRowPosition(foundY);
+        tmp.setColPosition(foundY);
+        Field field = fields[foundX][foundY];
+        field.setColPosition(y);
+        field.setRowPosition(x);
+        fields[x][y] = field;
         fields[foundX][foundY] = tmp;
         board.setFields(fields);
     }

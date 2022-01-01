@@ -52,6 +52,7 @@ public class TilePanel extends JPanel
                 {
                     if(currX != i || currY != j)
                     {
+                        tile.setStatus(FieldStatus.UNCOVERED);
                         tile.setBackground(Color.DARK_GRAY);
                     }
                     tile.setText("B");

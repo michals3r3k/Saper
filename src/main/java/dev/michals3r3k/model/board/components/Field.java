@@ -2,8 +2,8 @@ package dev.michals3r3k.model.board.components;
 
 public abstract class Field
 {
-    private final int rowPosition;
-    private final int colPosition;
+    private  int rowPosition;
+    private  int colPosition;
     private FieldStatus status;
 
     public Field(int rowPosition, int colPosition)
@@ -25,9 +25,19 @@ public abstract class Field
         return rowPosition;
     }
 
+    public void setRowPosition(final int rowPosition)
+    {
+        this.rowPosition = rowPosition;
+    }
+
     public int getColPosition()
     {
         return colPosition;
+    }
+
+    public void setColPosition(final int colPosition)
+    {
+        this.colPosition = colPosition;
     }
 
     public FieldStatus getStatus()
