@@ -1,6 +1,5 @@
 package dev.michals3r3k;
 
-import dev.michals3r3k.context.Context;
 import dev.michals3r3k.frame.LoginFrame;
 
 public class SaperRunner implements Runnable
@@ -16,7 +15,6 @@ public class SaperRunner implements Runnable
     public void run()
     {
         new LoginFrame();
-//        new MenuFrame();
     }
 
     public static SaperRunner getInstance()
