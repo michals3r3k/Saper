@@ -87,10 +87,10 @@ public class Tile extends JPanel implements MouseListener
 
     private void leftClickAction()
     {
-        Timer timer = gameFrame.getGameTimer().getTimer();
-        if(!timer.isRunning())
+        GameTimer gameTimer = gameFrame.getGameTimer();
+        if(!gameTimer.isRunning())
         {
-            timer.start();
+            gameTimer.start();
         }
         setStatus(FieldStatus.UNCOVERED);
         this.setBackground(Color.DARK_GRAY);
@@ -133,7 +133,7 @@ public class Tile extends JPanel implements MouseListener
         this.setBackground(Color.RED);
         tilePanel.uncoverBombs(position);
         tilePanel.setCanPlay(false);
-        gameFrame.getGameTimer().getTimer().stop();
+        gameFrame.getGameTimer().stop();
     }
 
     public void setValue(Integer value)

@@ -79,7 +79,7 @@ public class GameFrame extends JFrame
         this.gameTimer = new GameTimer(gameTime);
         if(board.isCalculated())
         {
-            gameTimer.getTimer().start();
+            gameTimer.start();
         }
         flagLabel.setBounds(140, 0, 40, 20);
         if(flagQuantity != null)
@@ -202,7 +202,7 @@ public class GameFrame extends JFrame
 
     public void gameWin()
     {
-        getGameTimer().getTimer().stop();
+        getGameTimer().stop();
         JFrame jFrame = new JFrame();
         jFrame.setVisible(true);
         jFrame.setSize(300, 200);

@@ -35,14 +35,24 @@ public class GameTimer extends JPanel
         this.setLayout(null);
     }
 
-    public Timer getTimer()
-    {
-        return timer;
-    }
-
     public GameTime getGameTime()
     {
         return gameTime;
+    }
+
+    public void start()
+    {
+        timer.start();
+    }
+
+    public void stop()
+    {
+        timer.stop();
+    }
+
+    public boolean isRunning()
+    {
+        return timer.isRunning();
     }
 
 }
