@@ -4,10 +4,10 @@ import dev.michals3r3k.context.Context;
 import dev.michals3r3k.context.SaveContext;
 import dev.michals3r3k.dao.SaveREPO;
 import dev.michals3r3k.dao.Saveable;
-import dev.michals3r3k.factory.BoardFactory;
 import dev.michals3r3k.frame.menu.GameParams;
 import dev.michals3r3k.frame.menu.MenuFrame;
 import dev.michals3r3k.model.board.Board;
+import dev.michals3r3k.model.save.GameTime;
 import dev.michals3r3k.model.save.Save;
 import dev.michals3r3k.model.save.SaveId;
 
@@ -17,22 +17,20 @@ import java.time.LocalDateTime;
 
 public class GameFrame extends JFrame
 {
-    private final BoardFactory boardFactory = new BoardFactory();
-    private final JLabel flagLabel;
+    private final Board board;
+    private JLabel flagLabel;
     private Integer flagQuantity;
-    private final GameTimer gameTimer;
+    private GameTimer gameTimer;
 
-    public GameFrame(int cols, int rows, int saturation)
+    public GameFrame(Save save)
     {
-        this.flagQuantity = null;
-        this.flagLabel = new JLabel();
-        this.gameTimer = new GameTimer();
-        Board board = boardFactory.getBoard(rows, cols, saturation);
-        JPanel headerPanel = getHeader(board);
+        this.board = save.getBoard();
+        JPanel headerPanel = getHeader(save.getFlagQuantity(),
+            save.getGameTime());
 
         TilePanel tilePanel = new TilePanel(board, this);
-        int boardWidth = cols * GameParams.TILE_SIZE;
-        int boardHeight = rows * GameParams.TILE_SIZE;
+        int boardWidth = board.getWidth() * GameParams.TILE_SIZE;
+        int boardHeight = board.getHeight() * GameParams.TILE_SIZE;
         tilePanel.setBounds(0, 0, boardWidth, boardHeight);
 
         JLayeredPane boardContent = new JLayeredPane();
@@ -72,13 +70,26 @@ public class GameFrame extends JFrame
         return frameWidth;
     }
 
-    private JPanel getHeader(Board board)
+    private JPanel getHeader(Integer flagQuantity, GameTime gameTime)
     {
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(null);
-        flagLabel.setText("");
+        this.flagQuantity = flagQuantity;
+        this.flagLabel = new JLabel();
+        this.gameTimer = new GameTimer(gameTime);
+        if(board.isCalculated())
+        {
+            gameTimer.getTimer().start();
+        }
         flagLabel.setBounds(140, 0, 40, 20);
-
+        if(flagQuantity != null)
+        {
+            flagLabel.setText(flagQuantity.toString());
+        }
+        else
+        {
+            flagLabel.setText("");
+        }
         JLabel label = new JLabel("Flags remaining:");
         label.setBounds(0, 0, 130, 20);
 
@@ -94,7 +105,7 @@ public class GameFrame extends JFrame
         JButton saveButton = new JButton("Save Game");
         saveButton.setBounds(gameTimer.getX() + gameTimer.getWidth() + 50,
             0, 130, 40);
-        saveButton.addActionListener(saveGame(board));
+        saveButton.addActionListener(saveGame());
 
         JButton menuButton = new JButton("Main menu");
         menuButton.setBounds(saveButton.getX(),
@@ -122,7 +133,7 @@ public class GameFrame extends JFrame
         };
     }
 
-    private ActionListener saveGame(Board board)
+    private ActionListener saveGame()
     {
         return (e) -> {
             Context context = Context.getContext();
@@ -137,8 +148,8 @@ public class GameFrame extends JFrame
     private Save getSave(final SaveContext saveContext, Board board)
     {
         SaveId saveIdOrNull = saveContext.getSaveIdOrNull();
-        return new Save(saveIdOrNull, board, gameTimer.getMinutes(),
-            gameTimer.getSeconds(), LocalDateTime.now());
+        return new Save(saveIdOrNull, flagQuantity, board,
+            gameTimer.getGameTime(), LocalDateTime.now());
     }
 
     public Integer getFlagQuantity()
@@ -148,8 +159,8 @@ public class GameFrame extends JFrame
 
     public void setFlagQuantity(Integer flagQuantity)
     {
-        getFlagLabel().setText(flagQuantity.toString());
         this.flagQuantity = flagQuantity;
+        getFlagLabel().setText(flagQuantity.toString());
     }
 
     public JLabel getFlagLabel()

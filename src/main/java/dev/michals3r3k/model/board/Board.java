@@ -15,11 +15,16 @@ public class Board
 
     public Board(Field[][] fields, int bombQuantity)
     {
+        this(fields, bombQuantity, false);
+    }
+
+    public Board(Field[][] fields, int bombQuantity, boolean calculated)
+    {
         this.fields = fields;
         this.bombQuantity = bombQuantity;
         this.height = fields.length;
         this.width = fields[height-1].length;
-        this.calculated = false;
+        this.calculated = calculated;
     }
 
     public Field[][] getFields()
@@ -35,6 +40,11 @@ public class Board
     public Field getField(int x, int y)
     {
         return fields[x][y];
+    }
+
+    public void setField(Field field)
+    {
+        fields[field.getRowPosition()][field.getColPosition()] = field;
     }
 
     public int getBombQuantity()

@@ -16,12 +16,12 @@ import static javax.swing.SwingUtilities.isRightMouseButton;
 
 public class Tile extends JPanel implements MouseListener
 {
-    private Board board;
-    private Position position;
-    private GameFrame gameFrame;
-    private BoardFactory boardFactory;
-    private TilePanel tilePanel;
-    private JLabel label;
+    private final Board board;
+    private final Position position;
+    private final GameFrame gameFrame;
+    private final BoardFactory boardFactory;
+    private final TilePanel tilePanel;
+    private final JLabel label;
 
     public Tile(
         Board board,
@@ -35,12 +35,12 @@ public class Tile extends JPanel implements MouseListener
         this.tilePanel = tilePanel;
         this.boardFactory = new BoardFactory();
         this.label = new JLabel();
-        this.setBackground(Color.LIGHT_GRAY);
+        this.setTextColor(Color.BLACK);
+        this.setBackground();
         this.setSize(new Dimension(GameParams.TILE_SIZE, GameParams.TILE_SIZE));
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         this.addMouseListener(this);
         this.add(label);
-        setTextColor(Color.BLACK);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class Tile extends JPanel implements MouseListener
         if(isFlag() && gameFrame.isCanPutFlag())
         {
             gameFrame.subtractFlag();
-            this.setBackground(new Color(40, 153, 118));
+            this.setBackground(GameParams.FLAG_COLOR);
             return;
         }
         gameFrame.addFlag();
@@ -87,6 +87,11 @@ public class Tile extends JPanel implements MouseListener
 
     private void leftClickAction()
     {
+        Timer timer = gameFrame.getGameTimer().getTimer();
+        if(!timer.isRunning())
+        {
+            timer.start();
+        }
         setStatus(FieldStatus.UNCOVERED);
         this.setBackground(Color.DARK_GRAY);
         if(tilePanel.isAllNonBombsUncovered())
@@ -121,7 +126,6 @@ public class Tile extends JPanel implements MouseListener
             boardFactory.swapBomb(getPosX(), getPosY(), board);
         }
         boardFactory.calculateRegularFields(board, gameFrame);
-        gameFrame.getGameTimer().getTimer().start();
     }
 
     private void bombClickAction()
@@ -181,6 +185,38 @@ public class Tile extends JPanel implements MouseListener
     public FieldType getFieldType()
     {
         return getField().getFieldType();
+    }
+
+    public void setBackground()
+    {
+        switch(getStatus())
+        {
+            case COVERED -> {
+                this.setBackground(Color.LIGHT_GRAY);
+            }
+            case FLAG -> {
+                this.setBackground(GameParams.FLAG_COLOR);
+            }
+            case UNCOVERED -> {
+                this.setBackground(Color.DARK_GRAY);
+                this.setAppearance();
+            }
+        }
+
+    }
+
+    private void setAppearance()
+    {
+        switch(getFieldType())
+        {
+            case REGULAR -> {
+                RegularField field = (RegularField) getField();
+                setValue(field.getValue());
+            }
+            case BOMB -> {
+                setText("B");
+            }
+        }
     }
 
     @Override

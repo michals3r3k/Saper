@@ -1,8 +1,10 @@
 package dev.michals3r3k.frame.menu;
 
 import dev.michals3r3k.context.Context;
+import dev.michals3r3k.context.SaveContext;
 import dev.michals3r3k.context.UserContext;
 import dev.michals3r3k.dao.SaveDAO;
+import dev.michals3r3k.frame.game.GameFrame;
 import dev.michals3r3k.model.save.Save;
 
 import javax.swing.*;
@@ -96,7 +98,10 @@ public class LoadFrame extends JFrame
     {
         return (e) -> {
             this.dispose();
-//            new GameFrame();
+            Context context = Context.getContext();
+            SaveContext saveContext = SaveContext.getSaveContext(context);
+            saveContext.setSave(save);
+            new GameFrame(save);
         };
     }
 

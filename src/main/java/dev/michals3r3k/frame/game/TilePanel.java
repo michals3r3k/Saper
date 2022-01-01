@@ -12,13 +12,11 @@ import java.util.List;
 
 public class TilePanel extends JPanel
 {
-    Tile[][] tilePanels;
-    Board board;
-    boolean canPlay;
+    private Tile[][] tilePanels;
+    private Board board;
+    private boolean canPlay;
 
-    TilePanel(
-        Board board,
-        GameFrame gameFrame)
+    TilePanel(Board board, GameFrame gameFrame)
     {
         this.canPlay = true;
         int rows = board.getHeight();
@@ -69,12 +67,14 @@ public class TilePanel extends JPanel
     public void uncoverEmptyNeighbours(int x, int y)
     {
         List<Tile> neighbourTiles = getNeighbourTiles(x, y);
-        neighbourTiles.forEach(t -> {
-            t.setBackground(Color.DARK_GRAY);
-            t.setStatus(FieldStatus.UNCOVERED);
-            if(t.getFieldType() == FieldType.REGULAR)
+        neighbourTiles.forEach(tile -> {
+            tile.setBackground(Color.DARK_GRAY);
+            tile.setStatus(FieldStatus.UNCOVERED);
+            if(tile.getFieldType() == FieldType.REGULAR)
             {
-                t.setValue(((RegularField) board.getField(t.getPosX(), t.getPosY())).getValue());
+                RegularField regularField =
+                    (RegularField) board.getField(tile.getPosX(), tile.getPosY());
+                tile.setValue(regularField.getValue());
             }
         });
     }

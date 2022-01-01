@@ -3,6 +3,7 @@ package dev.michals3r3k.dao;
 import dev.michals3r3k.Logger;
 import dev.michals3r3k.model.board.Board;
 import dev.michals3r3k.model.board.components.*;
+import dev.michals3r3k.model.save.GameTime;
 import dev.michals3r3k.model.save.Save;
 import dev.michals3r3k.model.save.SaveId;
 import org.json.simple.JSONArray;
@@ -77,36 +78,45 @@ public class SaveDAO
         JSONObject jsonSave = (JSONObject) ((JSONObject) object).get("save");
         LocalDateTime saveTime = LocalDateTime.parse(
             (String) jsonSave.get("date"), DTF);
-        int seconds = ((Long) jsonSave.get("seconds")).intValue();
-        int minutes = ((Long) jsonSave.get("minutes")).intValue();
-        Board board = getBoard(jsonSave);
-        SaveId id = getSaveId(jsonSave);
-        return new Save(id, board, minutes, seconds, saveTime);
+        return new Save(
+            getSaveId(jsonSave),
+            getFlagQuantity(jsonSave),
+            getBoard(jsonSave),
+            getGameTime(jsonSave),
+            saveTime);
     }
 
     private SaveId getSaveId(final JSONObject jsonSave)
     {
         JSONObject jsonId = (JSONObject) jsonSave.get("id");
-        long saveId = (Long) jsonId.get("saveId");
-        String username = (String) jsonId.get("username");
-        return new SaveId(saveId, username);
+        return new SaveId(
+            (Long) jsonId.get("saveId"),
+            (String) jsonId.get("username"));
+    }
+
+    private Integer getFlagQuantity(JSONObject jsonSave)
+    {
+        Long flagQuantity = (Long) jsonSave.get("flagQuantity");
+        if(flagQuantity == null)
+        {
+            return null;
+        }
+        return flagQuantity.intValue();
     }
 
     private Board getBoard(final JSONObject jsonSave)
     {
         JSONObject jsonBoard = (JSONObject) jsonSave.get("board");
         int bombQuantity = ((Long) jsonBoard.get("bombQuantity")).intValue();
-        int width = ((Long) jsonBoard.get("width")).intValue();
-        int height = ((Long) jsonBoard.get("height")).intValue();
-        Field[][] fields = getFields(jsonBoard, width, height);
-        return new Board(fields, bombQuantity);
+        boolean calculated = (Boolean) jsonBoard.get("calculated");
+        Field[][] fields = getFields(jsonBoard);
+        return new Board(fields, bombQuantity, calculated);
     }
 
-    private Field[][] getFields(
-        final JSONObject jsonBoard,
-        final int width,
-        final int height)
+    private Field[][] getFields(final JSONObject jsonBoard)
     {
+        int width = ((Long) jsonBoard.get("width")).intValue();
+        int height = ((Long) jsonBoard.get("height")).intValue();
         Field[][] fields = new Field[width][height];
         for(Object rows : (JSONArray) jsonBoard.get("fields"))
         {
@@ -115,22 +125,26 @@ public class SaveDAO
                 JSONObject jsonField = (JSONObject) field;
                 int x = ((Long) jsonField.get("x")).intValue();
                 int y = ((Long) jsonField.get("y")).intValue();
-                FieldType type = getFieldType((String) jsonField.get("type"));
-                FieldStatus status = getFieldStatus((String) jsonField.get("status"));
-                if(type == FieldType.BOMB)
-                {
-                    fields[x][y] = new BombField(x, y, status);
-                } else if(type == FieldType.REGULAR)
-                {
-                    int value = ((Long) jsonField.get("value")).intValue();
-                    fields[x][y] = new RegularField(x, y, status, value);
-                } else
-                {
-                    fields[x][y] = new EmptyField(x, y, status);
-                }
+                fields[x][y] = getField(jsonField, x ,y);
             }
         }
         return fields;
+    }
+
+    private Field getField(final JSONObject jsonField, int x, int y)
+    {
+        FieldType type = getFieldType((String) jsonField.get("type"));
+        FieldStatus status = getFieldStatus((String) jsonField.get("status"));
+        if(type == FieldType.BOMB)
+        {
+            return new BombField(x, y, status);
+        }
+        if(type == FieldType.REGULAR)
+        {
+            int value = ((Long) jsonField.get("value")).intValue();
+            return new RegularField(x, y, status, value);
+        }
+        return new EmptyField(x, y, status);
     }
 
     private FieldStatus getFieldStatus(final String status)
@@ -157,6 +171,15 @@ public class SaveDAO
             return FieldType.EMPTY;
         }
         return FieldType.REGULAR;
+    }
+
+    private GameTime getGameTime(final JSONObject jsonSave)
+    {
+        JSONObject jsonGameTime = (JSONObject) jsonSave.get("gameTime");
+        return new GameTime(
+            ((Long) jsonGameTime.get("seconds")).intValue(),
+            ((Long) jsonGameTime.get("minutes")).intValue(),
+            ((Long) jsonGameTime.get("elapsedTime")).intValue());
     }
 
 }

@@ -8,22 +8,28 @@ import java.util.Objects;
 public class Save
 {
     private SaveId id;
+    private Integer flagQuantity;
     private Board board;
-    private int minutes;
-    private int seconds;
+    private GameTime gameTime;
     private LocalDateTime saveTime;
+
+    public Save(Board board)
+    {
+        this(null, null, board,
+            new GameTime(0,0,0), null);
+    }
 
     public Save(
         final SaveId id,
+        final Integer flagQuantity,
         final Board board,
-        final int minutes,
-        final int seconds,
+        final GameTime time,
         final LocalDateTime saveTime)
     {
         this.id = id;
+        this.flagQuantity = flagQuantity;
         this.board = board;
-        this.minutes = minutes;
-        this.seconds = seconds;
+        this.gameTime = time;
         this.saveTime = saveTime;
     }
 
@@ -46,19 +52,19 @@ public class Save
         return board;
     }
 
-    public int getMinutes()
+    public GameTime getGameTime()
     {
-        return minutes;
-    }
-
-    public int getSeconds()
-    {
-        return seconds;
+        return gameTime;
     }
 
     public LocalDateTime getSaveTime()
     {
         return saveTime;
+    }
+
+    public Integer getFlagQuantity()
+    {
+        return flagQuantity;
     }
 
     @Override

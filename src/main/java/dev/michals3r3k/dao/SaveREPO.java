@@ -9,6 +9,7 @@ import dev.michals3r3k.model.board.components.FieldType;
 import dev.michals3r3k.model.board.components.RegularField;
 import dev.michals3r3k.model.save.Save;
 import dev.michals3r3k.model.save.SaveId;
+import dev.michals3r3k.model.save.GameTime;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -19,9 +20,9 @@ import java.util.Objects;
 
 public class SaveREPO implements Saveable
 {
-    private static DateTimeFormatter DTF =
+    private static final DateTimeFormatter DTF =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private Logger logger = new Logger();
+    private final Logger logger = new Logger();
 
     private final SaveDAO saveDAO = new SaveDAO();
 
@@ -89,15 +90,24 @@ public class SaveREPO implements Saveable
     private JSONObject convertToJson(final Save save)
     {
         JSONObject saveDetails = new JSONObject();
-        saveDetails.put("minutes", save.getMinutes());
-        saveDetails.put("seconds", save.getSeconds());
+        saveDetails.put("gameTime", getGameTime(save.getGameTime()));
         saveDetails.put("board", getJsonBoard(save.getBoard()));
         saveDetails.put("id", getJsonId(save.getId()));
         saveDetails.put("date", DTF.format(save.getSaveTime()));
+        saveDetails.put("flagQuantity", save.getFlagQuantity());
 
         JSONObject jsonSave = new JSONObject();
         jsonSave.put("save", saveDetails);
         return jsonSave;
+    }
+
+    private JSONObject getGameTime(final GameTime time)
+    {
+        JSONObject timeJSON = new JSONObject();
+        timeJSON.put("minutes", time.getMinutes());
+        timeJSON.put("seconds", time.getSeconds());
+        timeJSON.put("elapsedTime", time.getElapsedTime());
+        return timeJSON;
     }
 
     private void write(JSONArray jsonArray)

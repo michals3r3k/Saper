@@ -3,9 +3,11 @@ package dev.michals3r3k.frame.menu;
 import dev.michals3r3k.context.Context;
 import dev.michals3r3k.context.SaveContext;
 import dev.michals3r3k.context.UserContext;
+import dev.michals3r3k.factory.BoardFactory;
 import dev.michals3r3k.frame.LoginFrame;
 import dev.michals3r3k.frame.game.GameFrame;
 import dev.michals3r3k.model.User;
+import dev.michals3r3k.model.save.Save;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +17,7 @@ import java.util.List;
 
 public class MenuFrame extends JFrame
 {
+    private final BoardFactory boardFactory = new BoardFactory();
 
     public MenuFrame()
     {
@@ -126,8 +129,13 @@ public class MenuFrame extends JFrame
             this.dispose();
             int width = Integer.parseInt(colsField.getText());
             int height = Integer.parseInt(rowsField.getText());
-            new GameFrame(width, height,
-                GameParams.DIFFICULTY_MAP.get(difficultyField.getSelectedItem()));
+            int saturation = GameParams.DIFFICULTY_MAP.get(
+                (String) difficultyField.getSelectedItem());
+            Save save = new Save(boardFactory.getBoard(width, height, saturation));
+            Context context = Context.getContext();
+            SaveContext saveContext = SaveContext.getSaveContext(context);
+            saveContext.setSave(save);
+            new GameFrame(save);
         };
     }
 

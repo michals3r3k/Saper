@@ -1,31 +1,27 @@
 package dev.michals3r3k.frame.game;
 
+import dev.michals3r3k.model.save.GameTime;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class GameTimer extends JPanel
 {
-    int seconds;
-    int minutes;
-    int elapsedTime;
-    String secondsString;
-    String minutesString;
-    Timer timer;
+    private final GameTime gameTime;
+    private final Timer timer;
+    private String secondsString;
+    private String minutesString;
 
-    GameTimer()
+    GameTimer(GameTime time)
     {
-        this.seconds = 0;
-        this.minutes = 0;
-        this.elapsedTime = 0;
-        this.secondsString = String.format("%02d", seconds);
-        this.minutesString = String.format("%02d", minutes);
+        this.gameTime = time;
+        this.secondsString = String.format("%02d", time.getSeconds());
+        this.minutesString = String.format("%02d", time.getMinutes());
         JLabel timeLabel = new JLabel();
         this.timer = new Timer(1000, e -> {
-            elapsedTime += 1000;
-            this.seconds = (elapsedTime / 1000) % 60;
-            this.minutes = (elapsedTime / 60000) % 60;
-            this.secondsString = String.format("%02d", seconds);
-            this.minutesString = String.format("%02d", minutes);
+            gameTime.addSecond();
+            this.secondsString = String.format("%02d", gameTime.getSeconds());
+            this.minutesString = String.format("%02d", gameTime.getMinutes());
             timeLabel.setText(minutesString + ":" + secondsString);
         });
         timeLabel.setText(minutesString + ":" + secondsString);
@@ -44,34 +40,9 @@ public class GameTimer extends JPanel
         return timer;
     }
 
-    public int getSeconds()
+    public GameTime getGameTime()
     {
-        return seconds;
-    }
-
-    public void setSeconds(final int seconds)
-    {
-        this.seconds = seconds;
-    }
-
-    public int getMinutes()
-    {
-        return minutes;
-    }
-
-    public void setMinutes(final int minutes)
-    {
-        this.minutes = minutes;
-    }
-
-    public int getElapsedTime()
-    {
-        return elapsedTime;
-    }
-
-    public void setElapsedTime(final int elapsedTime)
-    {
-        this.elapsedTime = elapsedTime;
+        return gameTime;
     }
 
 }

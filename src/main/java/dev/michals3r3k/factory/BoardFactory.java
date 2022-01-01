@@ -1,10 +1,7 @@
 package dev.michals3r3k.factory;
 
 import dev.michals3r3k.model.board.Board;
-import dev.michals3r3k.model.board.components.BombField;
-import dev.michals3r3k.model.board.components.EmptyField;
-import dev.michals3r3k.model.board.components.Field;
-import dev.michals3r3k.model.board.components.RegularField;
+import dev.michals3r3k.model.board.components.*;
 import dev.michals3r3k.frame.game.GameFrame;
 
 import java.util.Random;
@@ -24,32 +21,35 @@ public class BoardFactory
     public void swapBomb(int x, int y, Board board)
     {
         Field[][] fields = board.getFields();
-        Integer foundX = null;
-        Integer foundY = null;
+        if(fields[x][y].getFieldType() != FieldType.BOMB)
+        {
+            throw new IllegalStateException("It's not a bomb");
+        }
+        EmptyField emptyFound = null;
         for(int i = 0; i < fields.length; i++)
         {
             for(int j = 0; j < fields[i].length; j++)
             {
-                if(fields[i][j] instanceof EmptyField)
+                Field field = fields[i][j];
+                if(field.getFieldType() == FieldType.EMPTY)
                 {
-                    foundX = i;
-                    foundY = j;
+                    emptyFound = (EmptyField) field;
                     break;
                 }
             }
-            if(foundX != null)
+            if(emptyFound != null)
             {
                 break;
             }
         }
-        Field tmp = fields[x][y];
-        tmp.setRowPosition(foundY);
-        tmp.setColPosition(foundY);
-        Field field = fields[foundX][foundY];
-        field.setColPosition(y);
-        field.setRowPosition(x);
-        fields[x][y] = field;
-        fields[foundX][foundY] = tmp;
+        if(emptyFound == null)
+        {
+            throw new IllegalStateException("Board creation error");
+        }
+        int xFound = emptyFound.getRowPosition();
+        int yFound = emptyFound.getColPosition();
+        fields[xFound][yFound] = new BombField(xFound, yFound, FieldStatus.COVERED);
+        fields[x][y] = new EmptyField(x, y, FieldStatus.UNCOVERED);
         board.setFields(fields);
     }
 
@@ -174,7 +174,7 @@ public class BoardFactory
 
     private boolean isBomb(Field field)
     {
-        return field instanceof BombField;
+        return field.getFieldType() == FieldType.BOMB;
     }
 
 }
