@@ -68,7 +68,6 @@ public class LoginFrame extends JFrame
         registerButton.addActionListener(
             register(nameField, passwordField));
 
-
         this.setTitle(GameParams.APP_TITLE);
         this.setSize(550, 650);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -98,10 +97,8 @@ public class LoginFrame extends JFrame
                 UserContext userContext = UserContext.getUserContext(context);
                 userContext.setUser(getUser(username));
                 context.setParameter(userContext);
-
                 SaveContext saveContext = SaveContext.getSaveContext(context);
                 context.setParameter(saveContext);
-
                 new MenuFrame();
             }
         };

@@ -191,18 +191,13 @@ public class Tile extends JPanel implements MouseListener
     {
         switch(getStatus())
         {
-            case COVERED -> {
-                this.setBackground(Color.LIGHT_GRAY);
-            }
-            case FLAG -> {
-                this.setBackground(GameParams.FLAG_COLOR);
-            }
+            case COVERED -> this.setBackground(Color.LIGHT_GRAY);
+            case FLAG -> this.setBackground(GameParams.FLAG_COLOR);
             case UNCOVERED -> {
                 this.setBackground(Color.DARK_GRAY);
                 this.setAppearance();
             }
         }
-
     }
 
     private void setAppearance()
@@ -213,9 +208,7 @@ public class Tile extends JPanel implements MouseListener
                 RegularField field = (RegularField) getField();
                 setValue(field.getValue());
             }
-            case BOMB -> {
-                setText("B");
-            }
+            case BOMB -> setText("B");
         }
     }
 

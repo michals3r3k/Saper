@@ -27,7 +27,6 @@ public class GameFrame extends JFrame
         this.board = save.getBoard();
         JPanel headerPanel = getHeader(save.getFlagQuantity(),
             save.getGameTime());
-
         TilePanel tilePanel = new TilePanel(board, this);
         int boardWidth = board.getWidth() * GameParams.TILE_SIZE;
         int boardHeight = board.getHeight() * GameParams.TILE_SIZE;
@@ -37,9 +36,8 @@ public class GameFrame extends JFrame
         boardContent.setBounds(100, 150, boardWidth, boardHeight);
         boardContent.add(tilePanel, JLayeredPane.DEFAULT_LAYER);
 
-        int frameWidth = centrifyAndGetFrameWidth(headerPanel, boardContent);
+        int frameWidth = getFrameWidthAndCenterComponents(headerPanel, boardContent);
         int gamePanelHeight = boardHeight + 200;
-
         this.setTitle(GameParams.APP_TITLE);
         this.setSize(frameWidth, gamePanelHeight);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -49,7 +47,7 @@ public class GameFrame extends JFrame
         this.setVisible(true);
     }
 
-    private int centrifyAndGetFrameWidth(
+    private int getFrameWidthAndCenterComponents(
         final JPanel headerPanel,
         final JLayeredPane boardContent)
     {
