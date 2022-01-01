@@ -8,7 +8,6 @@ public class GameParams
 {
     public static final int TILE_SIZE = 25;
     public static final Map<Integer, Color> TILE_VALUE_COLOR;
-
     static
     {
         TILE_VALUE_COLOR = new HashMap<>();
@@ -36,6 +35,8 @@ public class GameParams
         DIFFICULTY_MAP.put(MEDIUM, 25);
         DIFFICULTY_MAP.put(HARD, 50);
     }
+
+    public static final Color FLAG_COLOR = new Color(40, 153, 118);
 
     private GameParams()
     {

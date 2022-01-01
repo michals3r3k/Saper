@@ -1,6 +1,6 @@
 package dev.michals3r3k;
 
-import dev.michals3r3k.frame.menu.MenuFrame;
+import dev.michals3r3k.frame.LoginFrame;
 
 public class SaperRunner implements Runnable
 {
@@ -14,7 +14,7 @@ public class SaperRunner implements Runnable
     @Override
     public void run()
     {
-        new MenuFrame();
+        new LoginFrame();
     }
 
     public static SaperRunner getInstance()

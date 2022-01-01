@@ -1,10 +1,7 @@
 package dev.michals3r3k.frame.game;
 
-import dev.michals3r3k.board.Board;
-import dev.michals3r3k.board.components.Field;
-import dev.michals3r3k.board.components.FieldType;
-import dev.michals3r3k.board.components.Position;
-import dev.michals3r3k.board.components.RegularField;
+import dev.michals3r3k.model.board.Board;
+import dev.michals3r3k.model.board.components.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,13 +12,11 @@ import java.util.List;
 
 public class TilePanel extends JPanel
 {
-    Tile[][] tilePanels;
-    Board board;
-    boolean canPlay;
+    private Tile[][] tilePanels;
+    private Board board;
+    private boolean canPlay;
 
-    TilePanel(
-        Board board,
-        GameFrame gameFrame)
+    TilePanel(Board board, GameFrame gameFrame)
     {
         this.canPlay = true;
         int rows = board.getHeight();
@@ -55,6 +50,7 @@ public class TilePanel extends JPanel
                 {
                     if(currX != i || currY != j)
                     {
+                        tile.setStatus(FieldStatus.UNCOVERED);
                         tile.setBackground(Color.DARK_GRAY);
                     }
                     tile.setText("B");
@@ -71,11 +67,14 @@ public class TilePanel extends JPanel
     public void uncoverEmptyNeighbours(int x, int y)
     {
         List<Tile> neighbourTiles = getNeighbourTiles(x, y);
-        neighbourTiles.forEach(t -> {
-            t.setBackground(Color.DARK_GRAY);
-            if(t.getFieldType() == FieldType.REGULAR)
+        neighbourTiles.forEach(tile -> {
+            tile.setBackground(Color.DARK_GRAY);
+            tile.setStatus(FieldStatus.UNCOVERED);
+            if(tile.getFieldType() == FieldType.REGULAR)
             {
-                t.setValue(((RegularField) board.getField(t.getPosX(), t.getPosY())).getValue());
+                RegularField regularField =
+                    (RegularField) board.getField(tile.getPosX(), tile.getPosY());
+                tile.setValue(regularField.getValue());
             }
         });
     }
