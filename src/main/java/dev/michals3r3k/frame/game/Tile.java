@@ -94,11 +94,6 @@ public class Tile extends JPanel implements MouseListener
         }
         setStatus(FieldStatus.UNCOVERED);
         this.setBackground(Color.DARK_GRAY);
-        if(tilePanel.isAllNonBombsUncovered())
-        {
-            gameFrame.gameWin();
-            return;
-        }
         if(!board.isCalculated())
         {
             calculateBoard();
@@ -116,6 +111,10 @@ public class Tile extends JPanel implements MouseListener
         }
         RegularField regularField = (RegularField) field;
         setValue(regularField.getValue());
+        if(tilePanel.isAllNonBombsUncovered())
+        {
+            gameFrame.gameWin();
+        }
     }
 
     private void calculateBoard()
@@ -133,7 +132,7 @@ public class Tile extends JPanel implements MouseListener
         this.setBackground(Color.RED);
         tilePanel.uncoverBombs(position);
         tilePanel.setCanPlay(false);
-        gameFrame.getGameTimer().stop();
+        gameFrame.gameLost();
     }
 
     public void setValue(Integer value)
