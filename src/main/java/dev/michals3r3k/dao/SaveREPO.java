@@ -22,8 +22,8 @@ public class SaveREPO implements Saveable
 {
     private static final DateTimeFormatter DTF =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private final Logger logger = new Logger();
 
+    private final Logger logger = new Logger();
     private final SaveDAO saveDAO = new SaveDAO();
 
     @Override
@@ -61,15 +61,27 @@ public class SaveREPO implements Saveable
     @Override
     public void update(final Save save)
     {
-        JSONArray jsonSaves = saveDAO.getJSONSaves();
-        JSONObject saveFound = getSaved(jsonSaves, save);
-        jsonSaves.remove(saveFound);
+        JSONArray jsonSaves = getJsonArrayAfterRemove(save.getId());
         jsonSaves.add(convertToJson(save));
         write(jsonSaves);
         logger.info("Save has been updated");
     }
 
-    private JSONObject getSaved(final JSONArray jsonSaves, Save save)
+    @Override
+    public void remove(final Save save)
+    {
+        removeById(save.getId());
+    }
+
+    @Override
+    public void removeById(final SaveId saveId)
+    {
+        JSONArray jsonSaves = getJsonArrayAfterRemove(saveId);
+        write(jsonSaves);
+        logger.info("Save has been removed");
+    }
+
+    private JSONObject getJsonSave(final JSONArray jsonSaves, SaveId givenSaveId)
     {
         for(final Object obj : jsonSaves)
         {
@@ -79,7 +91,7 @@ public class SaveREPO implements Saveable
             long saveId = (Long) jsonId.get("saveId");
             String username = (String) jsonId.get("username");
             SaveId id = new SaveId(saveId, username);
-            if(id.equals(save.getId()))
+            if(id.equals(givenSaveId))
             {
                 return jsonSave;
             }
@@ -90,7 +102,7 @@ public class SaveREPO implements Saveable
     private JSONObject convertToJson(final Save save)
     {
         JSONObject saveDetails = new JSONObject();
-        saveDetails.put("gameTime", getGameTime(save.getGameTime()));
+        saveDetails.put("gameTime", getJsonGameTime(save.getGameTime()));
         saveDetails.put("board", getJsonBoard(save.getBoard()));
         saveDetails.put("id", getJsonId(save.getId()));
         saveDetails.put("date", DTF.format(save.getSaveTime()));
@@ -101,13 +113,13 @@ public class SaveREPO implements Saveable
         return jsonSave;
     }
 
-    private JSONObject getGameTime(final GameTime time)
+    private JSONObject getJsonGameTime(final GameTime time)
     {
-        JSONObject timeJSON = new JSONObject();
-        timeJSON.put("minutes", time.getMinutes());
-        timeJSON.put("seconds", time.getSeconds());
-        timeJSON.put("elapsedTime", time.getElapsedTime());
-        return timeJSON;
+        JSONObject jsonTime = new JSONObject();
+        jsonTime.put("minutes", time.getMinutes());
+        jsonTime.put("seconds", time.getSeconds());
+        jsonTime.put("elapsedTime", time.getElapsedTime());
+        return jsonTime;
     }
 
     private void write(JSONArray jsonArray)
@@ -169,4 +181,13 @@ public class SaveREPO implements Saveable
             .orElse(0L) + 1;
     }
 
+    private JSONArray getJsonArrayAfterRemove(final SaveId saveId)
+    {
+        JSONArray jsonSaves = saveDAO.getJSONSaves();
+        JSONObject saveJson = getJsonSave(jsonSaves, saveId);
+        jsonSaves.remove(saveJson);
+        return jsonSaves;
+    }
+
 }
+
