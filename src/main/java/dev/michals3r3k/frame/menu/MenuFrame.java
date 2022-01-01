@@ -66,16 +66,20 @@ public class MenuFrame extends JFrame
         formContainer.add(inputPanel);
 
         JButton submitButton = new JButton("Start!");
-        submitButton.setBounds(200, 330, 130, 40);
+        submitButton.setBounds(200, 300, 130, 40);
         submitButton.addActionListener(
             submitForm(colsField, rowsField, difficultyField));
 
         JButton loadButton = new JButton("Load game");
-        loadButton.setBounds(200, 380, 130, 40);
+        loadButton.setBounds(200, 350, 130, 40);
         loadButton.addActionListener(getLoadFrame());
 
+        JButton scoreBoardButton = new JButton("Score board");
+        scoreBoardButton.setBounds(200, 400, 130, 40);
+        scoreBoardButton.addActionListener(getScoreBoardFrame());
+
         JButton logoutButton = new JButton("Log out");
-        logoutButton.setBounds(200, 430, 130, 40);
+        logoutButton.setBounds(200, 450, 130, 40);
         logoutButton.addActionListener(logout());
 
         this.add(nameLabel);
@@ -88,7 +92,16 @@ public class MenuFrame extends JFrame
         this.add(formContainer);
         this.add(submitButton);
         this.add(loadButton);
+        this.add(scoreBoardButton);
         this.add(logoutButton);
+    }
+
+    private ActionListener getScoreBoardFrame()
+    {
+        return e -> {
+            this.dispose();
+            new ScoreBoardFrame();
+        };
     }
 
     private ActionListener logout()
@@ -131,7 +144,7 @@ public class MenuFrame extends JFrame
             int height = Integer.parseInt(rowsField.getText());
             int saturation = GameParams.DIFFICULTY_MAP.get(
                 (String) difficultyField.getSelectedItem());
-            Save save = new Save(boardFactory.getBoard(width, height, saturation));
+            Save save = new Save(boardFactory.getBoard(height, width, saturation));
             Context context = Context.getContext();
             SaveContext saveContext = SaveContext.getSaveContext(context);
             saveContext.setSave(save);

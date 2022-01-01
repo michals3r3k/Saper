@@ -5,6 +5,7 @@ import dev.michals3r3k.context.SaveContext;
 import dev.michals3r3k.context.UserContext;
 import dev.michals3r3k.dao.SaveREPO;
 import dev.michals3r3k.dao.Saveable;
+import dev.michals3r3k.dao.ScoreREPO;
 import dev.michals3r3k.frame.menu.GameParams;
 import dev.michals3r3k.frame.menu.MenuFrame;
 import dev.michals3r3k.model.board.Board;
@@ -22,6 +23,7 @@ public class GameFrame extends JFrame
     private JLabel flagLabel;
     private Integer flagQuantity;
     private GameTimer gameTimer;
+    private ScoreREPO scoreREPO = new ScoreREPO();
 
     public GameFrame(Save save)
     {
@@ -84,8 +86,7 @@ public class GameFrame extends JFrame
         if(flagQuantity != null)
         {
             flagLabel.setText(flagQuantity.toString());
-        }
-        else
+        } else
         {
             flagLabel.setText("");
         }
@@ -208,22 +209,26 @@ public class GameFrame extends JFrame
         winFrame.setSize(500, 300);
         winFrame.setLayout(null);
         Context context = Context.getContext();
-        UserContext userContext = UserContext.getUserContext(context);
+        String currentUserName = UserContext.getUserContext(context).getCurrentUserName();
         JLabel congratsLabel = new JLabel("CONGRATULATIONS " +
-            userContext.getCurrentUserName() + " YOU WIN!");
+            currentUserName + " YOU WIN!");
         congratsLabel.setBounds(90, 50, 400, 40);
         JLabel messageLabel = new JLabel("You want to save your score?");
         messageLabel.setBounds(90, 100, 400, 40);
         JButton backToMenuButton = new JButton("No");
-        backToMenuButton.addActionListener(e-> {
+        backToMenuButton.addActionListener(e -> {
             winFrame.dispose();
             this.dispose();
             new MenuFrame();
         });
         backToMenuButton.setBounds(90, 150, 90, 40);
         JButton saveScoreButton = new JButton("Yes");
-        saveScoreButton.addActionListener(e-> {
-
+        saveScoreButton.addActionListener(e -> {
+            Score score = new Score(LocalDateTime.now(), currentUserName,
+                gameTimer.getGameTime(), board);
+            scoreREPO.save(score);
+            this.dispose();
+            new MenuFrame();
         });
         saveScoreButton.setBounds(250, 150, 90, 40);
         winFrame.add(congratsLabel);
@@ -243,7 +248,7 @@ public class GameFrame extends JFrame
         JLabel jLabel = new JLabel("OH NO! YOU EXPLODED!");
         jLabel.setBounds(115, 50, 200, 50);
         JButton backToMenuButton = new JButton("Back to Menu");
-        backToMenuButton.addActionListener(e-> {
+        backToMenuButton.addActionListener(e -> {
             loseFrame.dispose();
             this.dispose();
             new MenuFrame();

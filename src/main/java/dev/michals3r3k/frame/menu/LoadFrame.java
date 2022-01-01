@@ -48,8 +48,8 @@ public class LoadFrame extends JFrame
         buttonPanel.setBounds(210, 0, 210, 300);
         for(int i = 0; i < saves.size(); i++)
         {
-            int yPos = (i + 1) * 50;
             Save save = saves.get(i);
+            int yPos = (i + 1) * 50;
             String labelStr = "Save " + i + ": " + getDateTimeString(save.getSaveTime());
             JLabel saveLabel = new JLabel(labelStr);
             saveLabel.setBounds(0, yPos, 200, 40);
