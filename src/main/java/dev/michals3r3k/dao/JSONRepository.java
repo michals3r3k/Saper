@@ -1,4 +1,4 @@
-package dev.michals3r3k.json;
+package dev.michals3r3k.dao;
 
 import dev.michals3r3k.Logger;
 import dev.michals3r3k.json.converter.JSONConverter;
@@ -12,9 +12,9 @@ import java.io.IOException;
 
 public abstract class JSONRepository<T extends Saveable<E>, E> implements Repository<T, E>
 {
-    protected JSONReader<T> jsonReader;
-    private JSONConverter<T, E> jsonConverter;
-    private Logger logger;
+    protected final JSONReader<T> jsonReader;
+    private final JSONConverter<T, E> jsonConverter;
+    private final Logger logger;
 
     protected JSONRepository(
         JSONReader<T> jsonReader,

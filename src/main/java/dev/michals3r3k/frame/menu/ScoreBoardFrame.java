@@ -1,6 +1,6 @@
 package dev.michals3r3k.frame.menu;
 
-import dev.michals3r3k.dao.ScoreDAO;
+import dev.michals3r3k.dao.score.ScoreDAO;
 import dev.michals3r3k.frame.game.Score;
 import dev.michals3r3k.model.save.GameTime;
 

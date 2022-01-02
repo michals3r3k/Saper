@@ -1,8 +1,9 @@
-package dev.michals3r3k.json;
+package dev.michals3r3k.dao.save;
 
 import dev.michals3r3k.Logger;
 import dev.michals3r3k.context.Context;
 import dev.michals3r3k.context.UserContext;
+import dev.michals3r3k.dao.JSONRepository;
 import dev.michals3r3k.json.converter.SaveJSONConverter;
 import dev.michals3r3k.json.reader.SaveJSONReader;
 import dev.michals3r3k.model.save.Save;

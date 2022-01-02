@@ -1,4 +1,4 @@
-package dev.michals3r3k.json;
+package dev.michals3r3k.dao;
 
 public interface Repository<T, E>
 {

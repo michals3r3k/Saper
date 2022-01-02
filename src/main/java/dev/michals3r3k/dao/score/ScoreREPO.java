@@ -1,4 +1,4 @@
-package dev.michals3r3k.dao;
+package dev.michals3r3k.dao.score;
 
 import dev.michals3r3k.Logger;
 import dev.michals3r3k.frame.game.Score;

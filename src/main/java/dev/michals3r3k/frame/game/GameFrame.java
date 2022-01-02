@@ -3,9 +3,8 @@ package dev.michals3r3k.frame.game;
 import dev.michals3r3k.context.Context;
 import dev.michals3r3k.context.SaveContext;
 import dev.michals3r3k.context.UserContext;
-import dev.michals3r3k.dao.SaveREPO;
-import dev.michals3r3k.dao.Saveable;
-import dev.michals3r3k.dao.ScoreREPO;
+import dev.michals3r3k.dao.save.SaveREPO;
+import dev.michals3r3k.dao.score.ScoreREPO;
 import dev.michals3r3k.frame.menu.GameParams;
 import dev.michals3r3k.frame.menu.MenuFrame;
 import dev.michals3r3k.model.board.Board;
@@ -138,9 +137,9 @@ public class GameFrame extends JFrame
         return (e) -> {
             Context context = Context.getContext();
             SaveContext saveContext = SaveContext.getSaveContext(context);
-            Saveable saveable = new SaveREPO();
+            SaveREPO repo = new SaveREPO();
             Save save = getSave(saveContext, board);
-            saveable.saveOrUpdate(save);
+            repo.saveOrUpdate(save);
             saveContext.setSave(save);
         };
     }
