@@ -18,6 +18,12 @@ public class SaveREPO extends JSONRepository<Save, SaveId>
     }
 
     @Override
+    protected String getSourceFileName()
+    {
+        return "saves.json";
+    }
+
+    @Override
     protected SaveId getNextId()
     {
         Context context = Context.getContext();

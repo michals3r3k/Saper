@@ -4,19 +4,14 @@ import dev.michals3r3k.context.Context;
 import dev.michals3r3k.context.SaveContext;
 import dev.michals3r3k.context.UserContext;
 import dev.michals3r3k.dao.user.UserDAO;
+import dev.michals3r3k.dao.user.UserREPO;
 import dev.michals3r3k.frame.menu.GameParams;
 import dev.michals3r3k.frame.menu.MenuFrame;
 import dev.michals3r3k.model.User;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +19,7 @@ import java.util.List;
 public class LoginFrame extends JFrame
 {
     private final UserDAO userDAO = new UserDAO();
+    private final UserREPO userREPO = new UserREPO();
 
     public LoginFrame()
     {
@@ -91,7 +87,8 @@ public class LoginFrame extends JFrame
                 String errorMessage = prepareErrorMessage(errors);
                 JOptionPane.showMessageDialog(null, errorMessage,
                     "Login failure", JOptionPane.ERROR_MESSAGE);
-            } else
+            }
+            else
             {
                 this.dispose();
                 Context context = Context.getContext();
@@ -134,53 +131,9 @@ public class LoginFrame extends JFrame
                     "Register failure", JOptionPane.ERROR_MESSAGE);
             } else
             {
-                createUser(username, password);
+                userREPO.save(new User(username, password));
             }
         };
-    }
-
-    private void createUser(final String username, final String password)
-    {
-        JSONObject userDetails = new JSONObject();
-        userDetails.put("username", username);
-        userDetails.put("password", password);
-
-        JSONObject userObject = new JSONObject();
-        userObject.put("user", userDetails);
-
-        JSONArray userList = getUserJsonArray();
-        if(userList == null)
-        {
-            userList = new JSONArray();
-        }
-        userList.add(userObject);
-
-        //Write JSON file
-        try(FileWriter file = new FileWriter("users.json", false))
-        {
-            //We can write any JSONArray or JSONObject instance to the file
-            file.write(userList.toJSONString());
-            file.flush();
-
-        } catch(IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    private JSONArray getUserJsonArray()
-    {
-        JSONParser jsonParser = new JSONParser();
-        JSONArray result = null;
-        try(FileReader reader = new FileReader("users.json"))
-        {
-            result = (JSONArray) jsonParser.parse(reader);
-        } catch(Exception e)
-        {
-            //nothing to do
-            e.printStackTrace();
-        }
-        return result;
     }
 
     private List<RegisterError> validateRegister(String username)

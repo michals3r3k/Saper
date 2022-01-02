@@ -17,9 +17,9 @@ public abstract class JSONRepository<T extends Saveable<E>, E> implements Reposi
     private final Logger logger;
 
     protected JSONRepository(
-        JSONReader<T> jsonReader,
-        JSONConverter<T, E> jsonConverter,
-        Logger logger)
+        final JSONReader<T> jsonReader,
+        final JSONConverter<T, E> jsonConverter,
+        final Logger logger)
     {
         this.jsonReader = jsonReader;
         this.jsonConverter = jsonConverter;
@@ -40,18 +40,29 @@ public abstract class JSONRepository<T extends Saveable<E>, E> implements Reposi
     @Override
     public void save(final T toSave)
     {
-        if(toSave.getId() != null)
+        if(checkId() && toSave.getId() != null)
         {
             throw new IllegalArgumentException("id should be null");
         }
-        toSave.setId(getNextId());
+        if(checkId() && toSave.getId() == null)
+        {
+            toSave.setId(getNextId());
+        }
         JSONArray jsonArray = jsonReader.getJSONArray();
         jsonArray.add(jsonConverter.convert(toSave));
         write(jsonArray);
         logger.info("New save has been saved");
     }
 
-    protected abstract E getNextId();
+    protected boolean checkId()
+    {
+        return true;
+    }
+
+    protected E getNextId()
+    {
+        return null;
+    }
 
     @Override
     public void update(final T toUpdate)
@@ -87,7 +98,7 @@ public abstract class JSONRepository<T extends Saveable<E>, E> implements Reposi
 
     private void write(JSONArray jsonArray)
     {
-        try(FileWriter fw = new FileWriter("saves.json"))
+        try(FileWriter fw = new FileWriter(getSourceFileName()))
         {
             fw.write(jsonArray.toJSONString());
         } catch(IOException e)
@@ -95,5 +106,7 @@ public abstract class JSONRepository<T extends Saveable<E>, E> implements Reposi
             e.printStackTrace();
         }
     }
+
+    protected abstract String getSourceFileName();
 
 }

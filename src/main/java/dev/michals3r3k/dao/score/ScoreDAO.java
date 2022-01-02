@@ -1,7 +1,7 @@
 package dev.michals3r3k.dao.score;
 
 import dev.michals3r3k.Logger;
-import dev.michals3r3k.frame.game.Score;
+import dev.michals3r3k.model.Score;
 import dev.michals3r3k.model.board.Board;
 import dev.michals3r3k.model.save.GameTime;
 import org.json.simple.JSONArray;

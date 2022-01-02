@@ -1,4 +1,4 @@
-package dev.michals3r3k.frame.game;
+package dev.michals3r3k.model;
 
 import dev.michals3r3k.model.board.Board;
 import dev.michals3r3k.model.save.GameTime;
