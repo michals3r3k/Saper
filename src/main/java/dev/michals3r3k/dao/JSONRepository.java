@@ -4,14 +4,26 @@ import dev.michals3r3k.Logger;
 import dev.michals3r3k.json.converter.JSONConverter;
 import dev.michals3r3k.json.reader.JSONReader;
 import dev.michals3r3k.model.Saveable;
+import dev.michals3r3k.model.User;
+import dev.michals3r3k.model.save.Save;
+import dev.michals3r3k.model.score.Score;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class JSONRepository<T extends Saveable<E>, E> implements Repository<T, E>
 {
+    private static final Map<Class<?>, String> NAME_MAP = new HashMap<>();
+    static
+    {
+        NAME_MAP.put(Save.class, "save");
+        NAME_MAP.put(User.class, "user");
+        NAME_MAP.put(Score.class, "score");
+    }
     protected final JSONReader<T> jsonReader;
     private final JSONConverter<T, E> jsonConverter;
     private final Logger logger;
@@ -51,7 +63,7 @@ public abstract class JSONRepository<T extends Saveable<E>, E> implements Reposi
         JSONArray jsonArray = jsonReader.getJSONArray();
         jsonArray.add(jsonConverter.convert(toSave));
         write(jsonArray);
-        logger.info("New save has been saved");
+        logger.info("new " + NAME_MAP.get(toSave.getClass()) + " has been saved");
     }
 
     protected boolean checkId()
@@ -70,7 +82,7 @@ public abstract class JSONRepository<T extends Saveable<E>, E> implements Reposi
         JSONArray jsonArray = getJsonArrayAfterRemove(toUpdate.getId());
         jsonArray.add(jsonConverter.convert(toUpdate));
         write(jsonArray);
-        logger.info("Save has been updated");
+        logger.info(NAME_MAP.get(toUpdate.getClass()) + " has been updated");
     }
 
 
@@ -85,7 +97,7 @@ public abstract class JSONRepository<T extends Saveable<E>, E> implements Reposi
     {
         JSONArray jsonSaves = getJsonArrayAfterRemove(id);
         write(jsonSaves);
-        logger.info("Save has been removed");
+        logger.info("object has been removed");
     }
 
     private JSONArray getJsonArrayAfterRemove(final E id)

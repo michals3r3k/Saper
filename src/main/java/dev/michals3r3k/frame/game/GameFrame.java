@@ -7,11 +7,11 @@ import dev.michals3r3k.dao.save.SaveREPO;
 import dev.michals3r3k.dao.score.ScoreREPO;
 import dev.michals3r3k.frame.menu.GameParams;
 import dev.michals3r3k.frame.menu.MenuFrame;
-import dev.michals3r3k.model.score.Score;
 import dev.michals3r3k.model.board.Board;
 import dev.michals3r3k.model.save.GameTime;
 import dev.michals3r3k.model.save.Save;
 import dev.michals3r3k.model.save.SaveId;
+import dev.michals3r3k.model.score.Score;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -23,7 +23,7 @@ public class GameFrame extends JFrame
     private JLabel flagLabel;
     private Integer flagQuantity;
     private GameTimer gameTimer;
-    private ScoreREPO scoreREPO = new ScoreREPO();
+    private final ScoreREPO scoreREPO = new ScoreREPO();
 
     public GameFrame(Save save)
     {
