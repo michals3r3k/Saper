@@ -1,8 +1,8 @@
 package dev.michals3r3k.frame.menu;
 
-import dev.michals3r3k.dao.ScoreDAO;
-import dev.michals3r3k.frame.game.Score;
+import dev.michals3r3k.dao.score.ScoreDAO;
 import dev.michals3r3k.model.save.GameTime;
+import dev.michals3r3k.model.score.Score;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +29,7 @@ public class ScoreBoardFrame extends JFrame
         headerPanel.setBorder(BorderFactory.createLineBorder(Color.RED, 4));
         headerPanel.add(headerLabel);
 
-        List<Score> scores = scoreDAO.getScores()
+        List<Score> scores = scoreDAO.getList()
             .stream()
             .limit(10)
             .collect(Collectors.toList());

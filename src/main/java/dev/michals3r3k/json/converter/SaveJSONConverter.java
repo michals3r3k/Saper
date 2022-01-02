@@ -1,89 +1,48 @@
-package dev.michals3r3k.dao;
+package dev.michals3r3k.json.converter;
 
-import dev.michals3r3k.Logger;
-import dev.michals3r3k.context.Context;
-import dev.michals3r3k.context.UserContext;
+import dev.michals3r3k.json.reader.SaveJSONReader;
 import dev.michals3r3k.model.board.Board;
 import dev.michals3r3k.model.board.components.Field;
 import dev.michals3r3k.model.board.components.FieldType;
 import dev.michals3r3k.model.board.components.RegularField;
+import dev.michals3r3k.model.save.GameTime;
 import dev.michals3r3k.model.save.Save;
 import dev.michals3r3k.model.save.SaveId;
-import dev.michals3r3k.model.save.GameTime;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
+import java.util.List;
 
-public class SaveREPO implements Saveable
+public class SaveJSONConverter extends JSONConverter<Save, SaveId>
 {
     private static final DateTimeFormatter DTF =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    private final Logger logger = new Logger();
-    private final SaveDAO saveDAO = new SaveDAO();
+    private final SaveJSONReader reader = new SaveJSONReader();
 
     @Override
-    public void saveOrUpdate(final Save save)
+    public JSONArray convert(final List<Save> saves)
     {
-        if(save.getId() == null)
-        {
-            save(save);
-            return;
-        }
-        update(save);
+        JSONArray jsonArray = new JSONArray();
+        saves.stream()
+            .map(this::convert)
+            .forEach(jsonArray::add);
+        return jsonArray;
     }
 
     @Override
-    public void save(final Save save)
+    public JSONObject convert(final Save save)
     {
-        if(save.getId() != null)
-        {
-            throw new IllegalArgumentException("id should be null");
-        }
-        save.setId(getNextSaveId());
-        JSONArray saves = saveDAO.getJSONSaves();
-        saves.add(convertToJson(save));
-        write(saves);
-        logger.info("New save has been saved");
-    }
-
-    private SaveId getNextSaveId()
-    {
-        Context context = Context.getContext();
-        UserContext userContext = UserContext.getUserContext(context);
-        return new SaveId(getFirstFreeSaveId(), userContext.getCurrentUserName());
+        JSONObject jsonSave = new JSONObject();
+        jsonSave.put("save", getJsonSaveDetails(save));
+        return jsonSave;
     }
 
     @Override
-    public void update(final Save save)
+    public JSONObject getById(final JSONArray list, final SaveId givenId)
     {
-        JSONArray jsonSaves = getJsonArrayAfterRemove(save.getId());
-        jsonSaves.add(convertToJson(save));
-        write(jsonSaves);
-        logger.info("Save has been updated");
-    }
-
-    @Override
-    public void remove(final Save save)
-    {
-        removeById(save.getId());
-    }
-
-    @Override
-    public void removeById(final SaveId saveId)
-    {
-        JSONArray jsonSaves = getJsonArrayAfterRemove(saveId);
-        write(jsonSaves);
-        logger.info("Save has been removed");
-    }
-
-    private JSONObject getJsonSave(final JSONArray jsonSaves, SaveId givenSaveId)
-    {
-        for(final Object obj : jsonSaves)
+        for(final Object obj : list)
         {
             JSONObject jsonSave = (JSONObject) obj;
             JSONObject jsonSaveDetails = (JSONObject) jsonSave.get("save");
@@ -91,7 +50,7 @@ public class SaveREPO implements Saveable
             long saveId = (Long) jsonId.get("saveId");
             String username = (String) jsonId.get("username");
             SaveId id = new SaveId(saveId, username);
-            if(id.equals(givenSaveId))
+            if(id.equals(givenId))
             {
                 return jsonSave;
             }
@@ -99,7 +58,7 @@ public class SaveREPO implements Saveable
         throw new IllegalStateException("Given save does not exists");
     }
 
-    private JSONObject convertToJson(final Save save)
+    private JSONObject getJsonSaveDetails(final Save save)
     {
         JSONObject saveDetails = new JSONObject();
         saveDetails.put("gameTime", getJsonGameTime(save.getGameTime()));
@@ -107,10 +66,7 @@ public class SaveREPO implements Saveable
         saveDetails.put("id", getJsonId(save.getId()));
         saveDetails.put("date", DTF.format(save.getSaveTime()));
         saveDetails.put("flagQuantity", save.getFlagQuantity());
-
-        JSONObject jsonSave = new JSONObject();
-        jsonSave.put("save", saveDetails);
-        return jsonSave;
+        return saveDetails;
     }
 
     private JSONObject getJsonGameTime(final GameTime time)
@@ -120,17 +76,6 @@ public class SaveREPO implements Saveable
         jsonTime.put("seconds", time.getSeconds());
         jsonTime.put("elapsedTime", time.getElapsedTime());
         return jsonTime;
-    }
-
-    private void write(JSONArray jsonArray)
-    {
-        try(FileWriter fw = new FileWriter("saves.json"))
-        {
-            fw.write(jsonArray.toJSONString());
-        } catch(IOException e)
-        {
-            e.printStackTrace();
-        }
     }
 
     private JSONObject getJsonBoard(Board board)
@@ -171,23 +116,4 @@ public class SaveREPO implements Saveable
         return jsonId;
     }
 
-    private long getFirstFreeSaveId()
-    {
-        return saveDAO.getSaves().stream()
-            .map(Save::getId)
-            .mapToLong(SaveId::getSaveId)
-            .filter(Objects::nonNull)
-            .max()
-            .orElse(0L) + 1;
-    }
-
-    private JSONArray getJsonArrayAfterRemove(final SaveId saveId)
-    {
-        JSONArray jsonSaves = saveDAO.getJSONSaves();
-        JSONObject saveJson = getJsonSave(jsonSaves, saveId);
-        jsonSaves.remove(saveJson);
-        return jsonSaves;
-    }
-
 }
-

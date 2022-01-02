@@ -1,43 +1,54 @@
-package dev.michals3r3k.dao;
+package dev.michals3r3k.json.converter;
 
-import dev.michals3r3k.Logger;
-import dev.michals3r3k.frame.game.Score;
 import dev.michals3r3k.model.board.Board;
 import dev.michals3r3k.model.save.GameTime;
+import dev.michals3r3k.model.score.Score;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
-public class ScoreREPO
+public class ScoreJSONConverter extends JSONConverter<Score, Long>
 {
     private static final DateTimeFormatter DTF =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    private final Logger logger = new Logger();
-    private final ScoreDAO scoreDAO = new ScoreDAO();
-
-    public void save(final Score score)
+    @Override
+    public JSONObject convert(final Score score)
     {
-        JSONArray scores = scoreDAO.getJSONScores();
-        scores.add(convertToJson(score));
-        write(scores);
-        logger.info("New score has been saved");
+        JSONObject scoreDetails = getJsonScoreDetails(score);
+
+        JSONObject jsonScore = new JSONObject();
+        jsonScore.put("score", scoreDetails);
+        return jsonScore;
     }
 
-    private JSONObject convertToJson(final Score score)
+    @Override
+    public JSONArray convert(final List<Score> scores)
+    {
+        JSONArray jsonArray = new JSONArray();
+        scores.stream()
+            .map(this::convert)
+            .forEach(jsonArray::add);
+        return jsonArray;
+    }
+
+    @Override
+    public JSONObject getById(final JSONArray list, final Long id)
+    {
+        return null;
+    }
+
+    private JSONObject getJsonScoreDetails(final Score score)
     {
         JSONObject scoreDetails = new JSONObject();
         scoreDetails.put("gameTime", getJsonGameTime(score.getGameTime()));
         scoreDetails.put("board", getJsonBoard(score.getBoard()));
         scoreDetails.put("date", DTF.format(score.getDate()));
         scoreDetails.put("username", score.getUsername());
-
-        JSONObject jsonScore = new JSONObject();
-        jsonScore.put("score", scoreDetails);
-        return jsonScore;
+        scoreDetails.put("id", score.getId());
+        return scoreDetails;
     }
 
     private JSONObject getJsonGameTime(final GameTime time)
@@ -47,17 +58,6 @@ public class ScoreREPO
         jsonTime.put("seconds", time.getSeconds());
         jsonTime.put("elapsedTime", time.getElapsedTime());
         return jsonTime;
-    }
-
-    private void write(JSONArray jsonArray)
-    {
-        try(FileWriter fw = new FileWriter("scores.json"))
-        {
-            fw.write(jsonArray.toJSONString());
-        } catch(IOException e)
-        {
-            e.printStackTrace();
-        }
     }
 
     private JSONObject getJsonBoard(Board board)

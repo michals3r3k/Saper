@@ -3,9 +3,8 @@ package dev.michals3r3k.frame.menu;
 import dev.michals3r3k.context.Context;
 import dev.michals3r3k.context.SaveContext;
 import dev.michals3r3k.context.UserContext;
-import dev.michals3r3k.dao.SaveDAO;
-import dev.michals3r3k.dao.SaveREPO;
-import dev.michals3r3k.dao.Saveable;
+import dev.michals3r3k.dao.save.SaveDAO;
+import dev.michals3r3k.dao.save.SaveREPO;
 import dev.michals3r3k.frame.game.GameFrame;
 import dev.michals3r3k.model.save.Save;
 
@@ -23,7 +22,7 @@ public class LoadFrame extends JFrame
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final SaveDAO saveDAO = new SaveDAO();
-    Saveable saveREPO = new SaveREPO();
+    private final SaveREPO saveREPO = new SaveREPO();
 
     public LoadFrame()
     {

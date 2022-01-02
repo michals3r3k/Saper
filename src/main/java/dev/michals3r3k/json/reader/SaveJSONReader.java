@@ -1,4 +1,4 @@
-package dev.michals3r3k.dao;
+package dev.michals3r3k.json.reader;
 
 import dev.michals3r3k.Logger;
 import dev.michals3r3k.model.board.Board;
@@ -8,11 +8,7 @@ import dev.michals3r3k.model.save.Save;
 import dev.michals3r3k.model.save.SaveId;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
-import java.io.FileReader;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -20,24 +16,26 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SaveDAO
+public class SaveJSONReader extends JSONReader<Save>
 {
-    private static final String SAVE_FILENAME = "saves.json";
     private static final DateTimeFormatter DTF =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    private final Logger logger = new Logger();
-
-    public List<Save> getSavesByUsername(String username)
+    public SaveJSONReader()
     {
-        return getSaves().stream()
-            .filter(save -> save.getId().getUsername().equals(username))
-            .collect(Collectors.toList());
+        super(new Logger());
     }
 
-    public List<Save> getSaves()
+    @Override
+    protected String getSourceFileName()
     {
-        JSONArray jsonSaves = getJSONSaves();
+        return "saves.json";
+    }
+
+    @Override
+    public List<Save> read()
+    {
+        JSONArray jsonSaves = getJSONArray();
         if(jsonSaves == null)
         {
             return Collections.emptyList();
@@ -46,23 +44,6 @@ public class SaveDAO
             .map(this::getSave)
             .sorted(Comparator.comparing(Save::getSaveTime).reversed())
             .collect(Collectors.toList());
-    }
-
-    JSONArray getJSONSaves()
-    {
-        JSONParser parser = new JSONParser();
-        JSONArray jsonArray = null;
-        try(FileReader fr = new FileReader(SAVE_FILENAME))
-        {
-            jsonArray = (JSONArray) parser.parse(fr);
-        } catch(ParseException e)
-        {
-            logger.warn(SAVE_FILENAME + " is empty");
-        } catch(IOException e)
-        {
-            e.printStackTrace();
-        }
-        return jsonArray == null ? new JSONArray() : jsonArray;
     }
 
     private Save getSave(Object object)
