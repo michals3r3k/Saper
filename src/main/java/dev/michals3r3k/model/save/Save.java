@@ -1,11 +1,12 @@
 package dev.michals3r3k.model.save;
 
+import dev.michals3r3k.model.Saveable;
 import dev.michals3r3k.model.board.Board;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Save
+public class Save implements Saveable<SaveId>
 {
     private SaveId id;
     private Integer flagQuantity;
@@ -32,7 +33,7 @@ public class Save
         this.gameTime = time;
         this.saveTime = saveTime;
     }
-
+    @Override
     public SaveId getId()
     {
         if(id == null || id.getSaveId() == null || id.getUsername() == null)
@@ -42,6 +43,7 @@ public class Save
         return id;
     }
 
+    @Override
     public void setId(final SaveId id)
     {
         this.id = id;
