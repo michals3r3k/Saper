@@ -2,7 +2,7 @@ package dev.michals3r3k.frame.game;
 
 import dev.michals3r3k.model.board.Board;
 import dev.michals3r3k.factory.BoardFactory;
-import dev.michals3r3k.frame.menu.GameParams;
+import dev.michals3r3k.GameParams;
 import dev.michals3r3k.model.board.components.*;
 
 import javax.swing.*;
@@ -99,18 +99,20 @@ public class Tile extends JPanel implements MouseListener
             calculateBoard();
         }
         Field field = getField();
-        if(field.getFieldType() == FieldType.EMPTY)
-        {
-            tilePanel.uncoverEmptyNeighbours(getPosX(), getPosY());
-            return;
-        }
         if(field.getFieldType() == FieldType.BOMB)
         {
             bombClickAction();
             return;
         }
-        RegularField regularField = (RegularField) field;
-        setValue(regularField.getValue());
+        if(field.getFieldType() == FieldType.REGULAR)
+        {
+            RegularField regularField = (RegularField) field;
+            setValue(regularField.getValue());
+        }
+        if(field.getFieldType() == FieldType.EMPTY)
+        {
+            tilePanel.uncoverEmptyNeighbours(getPosX(), getPosY());
+        }
         if(tilePanel.isAllNonBombsUncovered())
         {
             gameFrame.gameWin();

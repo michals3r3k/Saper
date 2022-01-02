@@ -1,6 +1,6 @@
 package dev.michals3r3k;
 
-import dev.michals3r3k.frame.LoginFrame;
+import dev.michals3r3k.frame.login.LoginFrame;
 
 public class SaperRunner implements Runnable
 {

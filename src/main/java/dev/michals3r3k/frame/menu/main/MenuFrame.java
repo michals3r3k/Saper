@@ -1,11 +1,14 @@
-package dev.michals3r3k.frame.menu;
+package dev.michals3r3k.frame.menu.main;
 
+import dev.michals3r3k.GameParams;
 import dev.michals3r3k.context.Context;
 import dev.michals3r3k.context.SaveContext;
 import dev.michals3r3k.context.UserContext;
 import dev.michals3r3k.factory.BoardFactory;
-import dev.michals3r3k.frame.LoginFrame;
+import dev.michals3r3k.frame.login.LoginFrame;
 import dev.michals3r3k.frame.game.GameFrame;
+import dev.michals3r3k.frame.menu.LoadFrame;
+import dev.michals3r3k.frame.menu.ScoreBoardFrame;
 import dev.michals3r3k.model.User;
 import dev.michals3r3k.model.save.Save;
 
@@ -163,6 +166,10 @@ public class MenuFrame extends JFrame
         {
             sb.append("\n\t* All fields should be filled");
         }
+        if(errors.contains(FormError.TOO_SHORT_VALUE))
+        {
+            sb.append("\n\t* Board shouldn't be smaller than 3x3");
+        }
         return sb.toString();
     }
 
@@ -174,12 +181,33 @@ public class MenuFrame extends JFrame
         if(isAnyFieldEmpty(colsField, rowsField))
         {
             errors.add(FormError.NOT_ALL_FILLED);
+            return errors;
         }
         if(!isNumberFieldsValid(colsField, rowsField))
         {
             errors.add(FormError.IS_NOT_DIGIT);
+            return errors;
+        }
+        if(!isProperValue(colsField, rowsField))
+        {
+            errors.add(FormError.TOO_SHORT_VALUE);
         }
         return errors;
+    }
+
+    private boolean isProperValue(final TextField colsField, final TextField rowsField)
+    {
+        int cols = Integer.parseInt(colsField.getText());
+        if(cols < 3)
+        {
+            return false;
+        }
+        int rows = Integer.parseInt(rowsField.getText());
+        if(rows < 3)
+        {
+            return false;
+        }
+        return true;
     }
 
     private boolean isNumberFieldsValid(TextField colsField, TextField rowsField)
