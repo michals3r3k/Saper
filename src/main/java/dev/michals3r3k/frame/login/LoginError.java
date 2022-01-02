@@ -1,4 +1,4 @@
-package dev.michals3r3k.frame;
+package dev.michals3r3k.frame.login;
 
 public enum LoginError
 {

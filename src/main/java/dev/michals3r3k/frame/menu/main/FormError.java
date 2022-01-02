@@ -1,4 +1,4 @@
-package dev.michals3r3k.frame.menu;
+package dev.michals3r3k.frame.menu.main;
 
 public enum FormError
 {

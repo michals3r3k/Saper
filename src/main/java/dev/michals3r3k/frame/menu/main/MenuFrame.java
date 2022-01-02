@@ -1,11 +1,14 @@
-package dev.michals3r3k.frame.menu;
+package dev.michals3r3k.frame.menu.main;
 
+import dev.michals3r3k.GameParams;
 import dev.michals3r3k.context.Context;
 import dev.michals3r3k.context.SaveContext;
 import dev.michals3r3k.context.UserContext;
 import dev.michals3r3k.factory.BoardFactory;
-import dev.michals3r3k.frame.LoginFrame;
+import dev.michals3r3k.frame.login.LoginFrame;
 import dev.michals3r3k.frame.game.GameFrame;
+import dev.michals3r3k.frame.menu.LoadFrame;
+import dev.michals3r3k.frame.menu.ScoreBoardFrame;
 import dev.michals3r3k.model.User;
 import dev.michals3r3k.model.save.Save;
 

@@ -1,12 +1,12 @@
-package dev.michals3r3k.frame;
+package dev.michals3r3k.frame.login;
 
 import dev.michals3r3k.context.Context;
 import dev.michals3r3k.context.SaveContext;
 import dev.michals3r3k.context.UserContext;
 import dev.michals3r3k.dao.user.UserDAO;
 import dev.michals3r3k.dao.user.UserREPO;
-import dev.michals3r3k.frame.menu.GameParams;
-import dev.michals3r3k.frame.menu.MenuFrame;
+import dev.michals3r3k.GameParams;
+import dev.michals3r3k.frame.menu.main.MenuFrame;
 import dev.michals3r3k.model.User;
 
 import javax.swing.*;
@@ -123,7 +123,7 @@ public class LoginFrame extends JFrame
         return (e) -> {
             String username = loginField.getText();
             String password = passwordField.getText();
-            List<RegisterError> errors = validateRegister(username);
+            List<RegisterError> errors = validateRegister(username, password);
             if(!errors.isEmpty())
             {
                 String errorMessage = prepareErrorMessage(errors);
@@ -136,8 +136,25 @@ public class LoginFrame extends JFrame
         };
     }
 
-    private List<RegisterError> validateRegister(String username)
+    private List<RegisterError> validateRegister(String username, String password)
     {
+        if(username.isBlank() || password.isBlank())
+        {
+            return List.of(RegisterError.BLANK_FIELDS);
+        }
+        List<RegisterError> result = new ArrayList<>();
+        if(username.length() < 2)
+        {
+            result.add(RegisterError.TOO_SHORT_USERNAME);
+        }
+        if(password.length() < 2)
+        {
+            result.add(RegisterError.TOO_SHORT_PASSWORD);
+        }
+        if(!result.isEmpty())
+        {
+            return result;
+        }
         User user = userDAO.getUser(username);
         if(user != null)
         {
@@ -160,6 +177,18 @@ public class LoginFrame extends JFrame
         if(errors.contains(RegisterError.ACCOUNT_ALREADY_EXIST))
         {
             sb.append("\n\t* Account already exists");
+        }
+        if(errors.contains(RegisterError.BLANK_FIELDS))
+        {
+            sb.append("\n\t* Both fields have to be filled");
+        }
+        if(errors.contains(RegisterError.TOO_SHORT_USERNAME))
+        {
+            sb.append("\n\t* Username is too short");
+        }
+        if(errors.contains(RegisterError.TOO_SHORT_PASSWORD))
+        {
+            sb.append("\n\t* Password is too short");
         }
         return sb.toString();
     }
