@@ -4,6 +4,8 @@ import dev.michals3r3k.context.Context;
 import dev.michals3r3k.context.SaveContext;
 import dev.michals3r3k.context.UserContext;
 import dev.michals3r3k.dao.SaveDAO;
+import dev.michals3r3k.dao.SaveREPO;
+import dev.michals3r3k.dao.Saveable;
 import dev.michals3r3k.frame.game.GameFrame;
 import dev.michals3r3k.model.save.Save;
 
@@ -21,6 +23,7 @@ public class LoadFrame extends JFrame
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final SaveDAO saveDAO = new SaveDAO();
+    Saveable saveREPO = new SaveREPO();
 
     public LoadFrame()
     {
@@ -45,8 +48,8 @@ public class LoadFrame extends JFrame
         buttonPanel.setBounds(210, 0, 210, 300);
         for(int i = 0; i < saves.size(); i++)
         {
-            int yPos = (i + 1) * 50;
             Save save = saves.get(i);
+            int yPos = (i + 1) * 50;
             String labelStr = "Save " + i + ": " + getDateTimeString(save.getSaveTime());
             JLabel saveLabel = new JLabel(labelStr);
             saveLabel.setBounds(0, yPos, 200, 40);
@@ -57,7 +60,7 @@ public class LoadFrame extends JFrame
             loadButton.addActionListener(loadGame(save));
             buttonPanel.add(loadButton);
 
-            JButton deleteButton = new JButton("Delete");
+            JButton deleteButton = new JButton("Remove");
             deleteButton.setBounds(110, yPos, 100, 40);
             deleteButton.addActionListener(deleteSave(save));
             buttonPanel.add(deleteButton);
@@ -91,6 +94,9 @@ public class LoadFrame extends JFrame
     private ActionListener deleteSave(final Save save)
     {
         return e -> {
+            saveREPO.remove(save);
+            this.dispose();
+            new LoadFrame();
         };
     }
 

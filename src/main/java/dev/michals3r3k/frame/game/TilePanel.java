@@ -187,12 +187,12 @@ public class TilePanel extends JPanel
 
     public boolean isAllNonBombsUncovered()
     {
-        return !Arrays.asList(this.tilePanels)
-            .stream()
+        return Arrays.stream(this.tilePanels)
             .map(Arrays::asList)
             .flatMap(Collection::stream)
-            .filter(this::isNotBomb)
-            .anyMatch(Tile::isVisible);
+            .map(Tile::getField)
+            .filter(f -> f.getFieldType() != FieldType.BOMB)
+            .noneMatch(f -> f.getStatus() == FieldStatus.COVERED);
     }
 
     private boolean isNotBomb(Tile tile)

@@ -28,14 +28,6 @@ public class SaveDAO
 
     private final Logger logger = new Logger();
 
-    public Save getSaveById(SaveId id)
-    {
-        return getSaves().stream()
-            .filter(s -> id.equals(s.getId()))
-            .findAny()
-            .orElse(null);
-    }
-
     public List<Save> getSavesByUsername(String username)
     {
         return getSaves().stream()
@@ -117,7 +109,7 @@ public class SaveDAO
     {
         int width = ((Long) jsonBoard.get("width")).intValue();
         int height = ((Long) jsonBoard.get("height")).intValue();
-        Field[][] fields = new Field[width][height];
+        Field[][] fields = new Field[height][width];
         for(Object rows : (JSONArray) jsonBoard.get("fields"))
         {
             for(Object field : (JSONArray) rows)

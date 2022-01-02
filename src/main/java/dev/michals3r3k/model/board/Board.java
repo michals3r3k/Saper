@@ -27,6 +27,14 @@ public class Board
         this.calculated = calculated;
     }
 
+    public Board(final int width, final int height, final int bombQuantity)
+    {
+        this.fields = null;
+        this.bombQuantity = bombQuantity;
+        this.width = width;
+        this.height = height;
+    }
+
     public Field[][] getFields()
     {
         return fields;
