@@ -7,7 +7,7 @@ import dev.michals3r3k.dao.save.SaveREPO;
 import dev.michals3r3k.dao.score.ScoreREPO;
 import dev.michals3r3k.frame.menu.GameParams;
 import dev.michals3r3k.frame.menu.MenuFrame;
-import dev.michals3r3k.model.Score;
+import dev.michals3r3k.model.score.Score;
 import dev.michals3r3k.model.board.Board;
 import dev.michals3r3k.model.save.GameTime;
 import dev.michals3r3k.model.save.Save;

@@ -1,16 +1,12 @@
-package dev.michals3r3k.dao.score;
+package dev.michals3r3k.json.reader;
 
 import dev.michals3r3k.Logger;
-import dev.michals3r3k.model.score.Score;
 import dev.michals3r3k.model.board.Board;
 import dev.michals3r3k.model.save.GameTime;
+import dev.michals3r3k.model.score.Score;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
-import java.io.FileReader;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -18,17 +14,26 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ScoreDAO
+public class ScoreJSONReader extends JSONReader<Score>
 {
-    private static final String SCORE_FILENAME = "scores.json";
     private static final DateTimeFormatter DTF =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    private final Logger logger = new Logger();
-
-    public List<Score> getScores()
+    public ScoreJSONReader()
     {
-        JSONArray jsonScores = getJSONScores();
+        super(new Logger());
+    }
+
+    @Override
+    protected String getSourceFileName()
+    {
+        return "scores.json";
+    }
+
+    @Override
+    public List<Score> read()
+    {
+        JSONArray jsonScores = getJSONArray();
         if(jsonScores == null)
         {
             return Collections.emptyList();
@@ -39,33 +44,16 @@ public class ScoreDAO
             .collect(Collectors.toList());
     }
 
-    JSONArray getJSONScores()
-    {
-        JSONParser parser = new JSONParser();
-        JSONArray jsonArray = null;
-        try(FileReader fr = new FileReader(SCORE_FILENAME))
-        {
-            jsonArray = (JSONArray) parser.parse(fr);
-        } catch(ParseException e)
-        {
-            logger.warn(SCORE_FILENAME + " is empty");
-        } catch(IOException e)
-        {
-            e.printStackTrace();
-        }
-        return jsonArray == null ? new JSONArray() : jsonArray;
-    }
-
     private Score getScore(Object object)
     {
         JSONObject jsonScore = (JSONObject) ((JSONObject) object).get("score");
         LocalDateTime date = LocalDateTime.parse(
             (String) jsonScore.get("date"), DTF);
+        Long id = (Long) jsonScore.get("id");
         String username = (String) jsonScore.get("username");
         GameTime gameTime = getGameTime(jsonScore);
         Board board = getBoard(jsonScore);
-
-        return new Score(date, username, gameTime, board);
+        return new Score(id, date, username, gameTime, board);
     }
 
     private GameTime getGameTime(final JSONObject jsonScore)
